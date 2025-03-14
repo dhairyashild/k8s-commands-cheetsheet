@@ -8,4 +8,5 @@ kubectl get pods --namespace=<insert-namespace-name-here>
 k create ns dev-ns
 kubectl config set-context --current --namespace=<namespace-name-here>     #### set ontext for new ns so changes default context to new ns
 
-kubectl config view --minify | grep namespace:                             ###   0n which ns ur currently shows
+kubectl config view --minify | grep namespace:                             ###   0n which ns ur currently shows. if it shows nothing it means ur in default ns
+
