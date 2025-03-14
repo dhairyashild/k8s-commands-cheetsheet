@@ -2,6 +2,11 @@ k run mypod --image=nginx --port=8080 --namespace=<namespace-name>
 k label pod mypod --label=env=prod
 kubectl get pods --namespace=<insert-namespace-name-here>
 
+#####DEPLOYMENT
+k create deploy deployname --image=nginx --port=80
+kubectl create deploy deployname --image=nginx --port=80 --replicas=3 --labels="app=nginx,env=production" --namespace=my-namespace
+kubectl label deploy new1 key=value
+
 
 
 ##NAMESPACE== NS
