@@ -4,8 +4,10 @@ kubectl get pods --namespace=<insert-namespace-name-here>
 
 #####DEPLOYMENT
 k create deploy deployname --image=nginx --port=80
-kubectl create deploy deployname --image=nginx --port=80 --replicas=3 --labels="app=nginx,env=production" --namespace=my-namespace
+kubectl create deploy deployname --image=nginx --port=80 --replicas=3  --namespace=my-namespace
+kubectl create deploy deployname --image=nginx --port=80 --replicas=3 --namespace=my-namespace --dry-run=client -o yaml>deploy.yaml
 kubectl label deploy new1 key=value
+kubectl label deploy new1 key1=value1 key2=value2 key3=value3
 
 
 
