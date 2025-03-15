@@ -17,3 +17,12 @@ kubectl config set-context --current --namespace=<namespace-name-here>     #### 
 
 kubectl config view --minify | grep namespace:                             ###   0n which ns ur currently shows. if it shows nothing it means ur in default ns
 
+
+
+####ROLLOUT
+kubectl create deploy mydeploy --image=nginx1.14.1 
+kubectl set image deployment/frontend <container-name>=image:tag --record=true # --record=true ====this creates change cause annotation.....+ we have nginx version =1.14.1/1.15.1/1.16.1/1.17.1/1.21.6             # Rolling update imperative
+kubectl rollout history deployment/frontend                      # Check the history of deployments including the revision
+kubectl rollout undo deployment/frontend                         # Rollback to the previous deployment
+kubectl rollout history deployment/frontend  --revision=3        # it gives all info @ changes made in revision 3 only
+kubectl rollout undo deployment/frontend --to-revision=2         # Rollback to a specific revision
