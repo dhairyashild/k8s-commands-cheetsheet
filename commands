@@ -26,3 +26,12 @@ kubectl rollout history deployment/frontend                      # Check the his
 kubectl rollout undo deployment/frontend                         # Rollback to the previous deployment
 kubectl rollout history deployment/frontend  --revision=3        # it gives all info @ changes made in revision 3 only
 kubectl rollout undo deployment/frontend --to-revision=2         # Rollback to a specific revision
+
+
+###configmap
+k exec PODNAME -- env                                ####  give env var --space before env
+
+k exec -it PODNAME -- /bin/bash           #### sometimes /bin/bash not works   # double dash and space before /bin/bash
+error: Internal error occurred: Internal error occurred: error executing command in container: failed to exec in container: failed to start exec "66f59d5cbed97941a6ed142b15437155aa3f8ef9224ad0987751bc67966ec020": OCI runtime exec failed: exec failed: unable to start container process: exec: "/bin/bash": stat /bin/bash: no such file or directory: unknown
+
+kubectl exec -it configmap-demo-pod -- /bin/sh
