@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: cont1
+          image: nginx:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "250Mi"
+            requests:
+              cpu: "500m"
+              memory: "100Mi"
+          ports:
+            - containerPort: 80
+          envFrom: []
+          volumeMounts: []
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 60
+            successThreshold: 1
+            failureThreshold: 4
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 60
+            successThreshold: 1
+            failureThreshold: 4
+
+        - name: extra-cont
+          image: example-image:latest # Replace with actual image name
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+          envFrom: []
+          volumeMounts: []
+
+      automountServiceAccountToken: false
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - ALL
+
+      podSecurityContext:
+        fsGroup: 2000
+
+      volumes:
+        # Uncomment and configure volumes as needed.
+        # - name: log-volume
+        #   emptyDir: {}
+        # - name: config-volume
+        #   configMap:
+        #     name: name
+
+      affinity: {}
+      tolerations: []
+      topologySpreadConstraints:
+        # Uncomment and configure constraints as needed.
+        # - maxSkew: 1
+        #   topologyKey: "kubernetes.io/hostname"
+        #   whenUnsatisfiable: ScheduleAnyway
+
+imagePullSecrets:
+  [] # Add secrets if needed
+
+serviceAccountName: deploy-service-account # Specify your service account name here if needed
+
+# Additional configurations can be added below as needed.
