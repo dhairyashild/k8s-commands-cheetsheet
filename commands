@@ -31,6 +31,13 @@ kubectl rollout undo deployment/frontend --to-revision=2         # Rollback to a
 ###configmap
 k exec PODNAME -- env                                ####  give env var --space before env
 
+
+
+
+#### ENDPOINTS
+k get endpoints                                        ==== give endpoints of all svc
+k describe svc svcnav                                  ==== also give endpoints under that svc
+
 k exec -it PODNAME -- /bin/bash           #### sometimes /bin/bash not works   # double dash and space before /bin/bash
 error: Internal error occurred: Internal error occurred: error executing command in container: failed to exec in container: failed to start exec "66f59d5cbed97941a6ed142b15437155aa3f8ef9224ad0987751bc67966ec020": OCI runtime exec failed: exec failed: unable to start container process: exec: "/bin/bash": stat /bin/bash: no such file or directory: unknown
 
