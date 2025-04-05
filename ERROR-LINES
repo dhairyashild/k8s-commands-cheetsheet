@@ -1,0 +1,6 @@
+k apply -f d.yaml 
+Error from server (BadRequest): error when creating "d.yaml": Deployment in version "v1" cannot be handled as a Deployment: strict decoding error: unknown field "metadata.Namespace"
+
+SOLUTION==
+BadRequest  /  "v1" cannot be handled as    / unknown field "metadata.Namespace"       
+MEANS WRONG WORDS OR INDENTATION   (TYPO)
