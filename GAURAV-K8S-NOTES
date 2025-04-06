@@ -127,4 +127,31 @@ curl svcnav                                            ####if ur in same ns of t
 curl svcnav.nsnav.svc.cluster.local
 ####remember                        svc.ns                             SCL(.svc.cluster.local)     
 
-##################################
+##################################39. Kubernetes ( In Hindi ) - Resource Quota
+Compute Resource Quota----requests  limits cpu memory
+Object Count Quota ----pods , services, secrets, configmaps          link---  https://kubernetes.io/docs/concepts/policy/resource-quotas/
+
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: myquota
+spec:
+  hard:                                  ####
+    pods: 10
+    requests.cpu: 500m                   #### 500 millicores (0.5 core), 
+    requests.memory: 500Mi
+    limits.cpu: "1"                       #### "1" = 1 core
+    limits.memory: 1Gi                    #### 1 gibibyte== 1073  MB
+
+
+k describe ns                            ####it gives Quota and limitrange values here
+###########40. Kubernetes ( In Hindi ) - LimitRange  
+                                                    Sets min/max resource limits  for  pods in a namespace.
+k get limits/limitranges              #### both same
+k expalin limitrange | less                   ==== it gives apiversion , kind ...
+k api-resources | grep -i limits            ##### it gives short names used for that resource like limits   =limitranges
+
+
+
+
