@@ -1,0 +1,11 @@
+13  vid -- SET ENV remember this only ==                    env:  - name: value:                              k exec -it podnav -- env
+
+spec:
+  containers:
+  - name: firstcontainer
+    image: coolgourav147/nginx-custom
+    env:
+    - name: myname
+      value: Gaurav
+    - name: city
+      value: Jatpur
