@@ -1,4 +1,4 @@
-13  vid -- SET ENV remember this only ==                    env:  - name: value:                              k exec -it podnav -- env
+13  vid -- SET ENV remember this only ==                    env:  - name:   value:/valueFrom:                              k exec -it podnav -c containernav -- env
 
 spec:
   containers:
@@ -9,3 +9,62 @@ spec:
       value: Gaurav
     - name: city
       value: Jatpur
+
+
+14  RUN COMMAND INSIDE POD (-- /bin/bash) ==                                                                              kubectl exec -it myfirstpod -c firstcontainer -- /bin/bash
+
+15     COMMAND & ARGS
+##### devops pro gyan  ########
+commands and args:—  are used in the container specification to override the default entrypoint and arguments of a container.
+### REMEMBER ===COMMAND NOT COMMANDS & args not arg  ===both are in      [] with "  " ,
+-command: [ "              "    ,    "                   " ]
+-args:    [ "              "    ,    "                   " ]
+
+command: ["/bin/bash"]                       #ENTRYPOINT IN DOCKER(FIX)  = command: ["shell name where u want to run command"]
+args: ["-c","date"]                          #CMD IN DOCKER(CAN BE OVERRIDE)= args: ["-c","command"]                   -c == command
+
+containers:
+      - name: nginx
+        image: nginx:latest
+        env:
+        - name: MESSAGE
+          value: "Hello from environment variable!"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        command: ["/bin/sh", "-c"]
+        args: ["echo $MESSAGE && echo My Pod Name is $POD_NAME && sleep infinity"]
+#############################################GAURAV 15 VID
+spec:
+  containers:
+  - name: firstcontainer
+    image: ubuntu
+    env:
+    - name: myname
+      value: Gaurav
+    - name: city
+      value: Jalpur
+    args: ["sleep", "1000"]                        #### remeber only args sufficint to run commands no need of k8s command 
+
+#### remeber args can be given like this also
+    args:
+    - "sleep"
+    - "1000"
+
+
+######################################### 16 multi-cont pod  ---  remember nic(name image) must need for each container
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-sleep-less
+spec:
+  containers:
+  - name: busybox
+    image: busybox:1.28
+    args:
+    - sleep
+    - "1000"
+  - name: x
+    image: ubuntu
+    args: ["sleep","1000"]
