@@ -95,6 +95,36 @@ spec:
 ################################################################
 k explain --recursive deploy | less                                                  ---get all things @ any resoure
 #############################################################################
-################################################################
+################################################################30 DEPLOYMENT STRATEGIES
 
+ROLLINGUPDATE-- Create new rs and use max surge to add new pod then delete old pod
+recreate-- delete all pods in old rs and create new all pod -- Downtime-- used in dev stage where no need of HA
+blue-green-
+canary--
 
+#######################################32 33 Kubernetes ( In Hindi ) - Resource Request     
+####remember                         resources -----requests/limits------    cpu/memory
+####remember                  free -m                    ==========shows how much memory avail on ur node so u can use remaining for pod
+#### limits use for 1 microservice load not impact other
+
+spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80 
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+####################################37Service DNS
+go in pod in 1 ns
+k exec -it podnav -- /bin/bash
+curl svcnav                                            ####if ur in same ns of that svc
+curl svcnav.nsnav.svc.cluster.local
+####remember                        svc.ns                             SCL(.svc.cluster.local)     
+
+##################################
