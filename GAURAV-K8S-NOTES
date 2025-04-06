@@ -68,3 +68,33 @@ spec:
   - name: x
     image: ubuntu
     args: ["sleep","1000"]
+
+################18   clusterip
+k get po
+k label pod busybox key=value
+k expose pod busybox --port=8080 --target-port=80                   ####clusterip
+k expose pod busybox --type=NodePort --port=8080 --target-port=80     ####nodeport
+k curl busybox:8000                                    #### port of svc need for curl
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app.kubernetes.io/name: MyApp                     ####  (add key: value here)
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 9376
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 9377
+################################################################
+k explain --recursive deploy | less                                                  ---get all things @ any resoure
+#############################################################################
+################################################################
+
+
