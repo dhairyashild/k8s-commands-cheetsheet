@@ -1,4 +1,4 @@
-13  vid -- SET ENV remember this only ==                    env:  - name:   value:/valueFrom:                              k exec -it podnav -c containernav -- env
+13  vid -- SET ENV remember this only ==        env:  - name:   value:/valueFrom:             k exec -it podnav -c containernav -- env
 
 spec:
   containers:
@@ -10,10 +10,20 @@ spec:
     - name: city
       value: Jatpur
 
-
-14  RUN COMMAND INSIDE POD (-- /bin/bash) ==                                                                              kubectl exec -it myfirstpod -c firstcontainer -- /bin/bash
+###############
+14  RUN COMMAND INSIDE POD (-- /bin/bash) ==                  kubectl exec -it myfirstpod -c firstcontainer -- /bin/bash
+####################
 
 15     COMMAND & ARGS
+
+Command: Specifies the executable or script to run inside the container.--Example: command: ["/bin/bash"]
+Args: Provides arguments for the specified command or default image command.--Example: args: ["-c", "date"]
+
+Key Difference:
+-command overrides the default entrypoint of the Docker image.
+-args modifies or passes parameters to the command.
+
+
 ##### devops pro gyan  ########
 commands and args:—  are used in the container specification to override the default entrypoint and arguments of a container.
 ### REMEMBER ===COMMAND NOT COMMANDS & args not arg  ===both are in      [] with "  " ,
