@@ -1,0 +1,17 @@
+Q main difference why ecs made if eks there..==ECS was designed to provide simpler container orchestration tightly integrated with AWS and eks for multicloud
+Complexity:
+
+ECS is simpler to manage, ideal for AWS-integrated applications.
+EKS supports complex microservices architectures with Kubernetes flexibility.
+
+Portability:
+ECS ties workloads to AWS, limiting portability.
+EKS offers multi-cloud compatibility via Kubernetes' open standards
+
+
+
+Q   how to choose deploy strategy
+
+on company need
+bluegreen & canary for 0 downtime but more resources
+rolling for 0 downtimetime 
