@@ -1,0 +1,11 @@
+k exec podname -n nsnav -- ls 
+
+k exec podname -n nsnav --it /bash         ##non-prod command
+
+k get svc -A         -------80/TCP
+k port-forward svc/mysvc 8000:80    
+                                            ------8000=MY-EC2-PORT ,80=SVC-PORT-GET IN ABOVE COMMAND 
+                                            ------OR GET INYAML OF SVC NO TARGET PORT NEED UNLESS U PORT FORWARD DIRECT TO POD NOT SVC
+curl localhost:8000    
+                                            ----localhost:localport above command and this is used in non-prod to get pod access on internet to check
+localhost:8000                              ----add this on broeser
