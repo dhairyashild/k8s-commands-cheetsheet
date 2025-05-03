@@ -1,4 +1,5 @@
-k run mypod --image=nginx --port=8080 --namespace=<namespace-name>
+k run mypod --image=nginx --port=8080 --namespace=<namespace-name> --env=name=value                        ### IPNE
+
 k label pod mypod --label=env=prod
 kubectl get pods --namespace=<insert-namespace-name-here>
 
@@ -41,4 +42,5 @@ k describe svc svcnav                                  ==== also give endpoints 
 k exec -it PODNAME -- /bin/bash           #### sometimes /bin/bash not works   # double dash and space before /bin/bash
 error: Internal error occurred: Internal error occurred: error executing command in container: failed to exec in container: failed to start exec "66f59d5cbed97941a6ed142b15437155aa3f8ef9224ad0987751bc67966ec020": OCI runtime exec failed: exec failed: unable to start container process: exec: "/bin/bash": stat /bin/bash: no such file or directory: unknown
 
-kubectl exec -it configmap-demo-pod -- /bin/sh
+kubectl exec -it configmap-demo-pod -- /bin/sh               == ENTER BY /BIN/BASH
+kubectl exec -it configmap-demo-pod -- env                   == NOT ENTER IN POD  --JUST RUN COMMAND ON POD
