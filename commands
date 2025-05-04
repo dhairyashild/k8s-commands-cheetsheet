@@ -29,7 +29,7 @@ kubectl rollout history deployment/frontend  --revision=3        # it gives all 
 kubectl rollout undo deployment/frontend --to-revision=2         # Rollback to a specific revision
 
 
-###configmap
+###configmap--- ns specific asate -- key chi file banavate  
 k exec PODNAME -- env                                ####  give env var --space before env
 
 
