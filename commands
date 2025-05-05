@@ -44,3 +44,7 @@ error: Internal error occurred: Internal error occurred: error executing command
 
 kubectl exec -it configmap-demo-pod -- /bin/sh               == ENTER BY /BIN/BASH
 kubectl exec -it configmap-demo-pod -- env                   == NOT ENTER IN POD  --JUST RUN COMMAND ON POD
+
+### GAURAV
+k apply-f pod.yaml --namespace=prod           ----gaurav command to give ns by command
+k config set-context --current --namespace=NSNAME
