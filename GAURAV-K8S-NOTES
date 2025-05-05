@@ -135,9 +135,14 @@ blue-green-
 canary--
 
 #######################################32 33 Kubernetes ( In Hindi ) - Resource Request     
-####remember                         resources -----requests/limits------    cpu/memory
+####remember                         resources -----requests/limits------    cpu/memory add word by me
 ####remember                  free -m                    ==========shows how much memory avail on ur node so u can use remaining for pod
 #### limits use for 1 microservice load not impact other
+
+MiB = (binary, 1024²)
+MB = (decimal, 1000²)
+K8s uses MiB because computers work in binary (1024-based).
+
 
 spec:
       containers:
@@ -149,9 +154,9 @@ spec:
           requests:
             memory: "64Mi"
             cpu: "250m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
+          limits:                          ## cpu and memory added by me if copy from k explain --recursive
+            memory: "128Mi"                ## not use m (megabyte) use only Mi (mebibyte-binary1024) 
+            cpu: "500m"                    ## capital M for memory but small m for cpu ani chiktun   ## 500m ==== 0.5 both same
 ####################################37Service DNS
 go in pod in 1 ns
 k exec -it podnav -- /bin/bash
@@ -171,12 +176,12 @@ metadata:
 spec:
   hard:                                  ####
     pods: 10
-    requests.cpu: 500m                   #### 500 millicores (0.5 core), 
-    requests.memory: 500Mi
-    limits.cpu: "1"                       #### "1" = 1 core
-    limits.memory: 1Gi                    #### 1 gibibyte== 1073  MB
+    requests.cpu: 500m                   ### 500m = 500 millicores (0.5 core), 
+    requests.memory: 500Mi               ### container made request khali cpu ani memory yete, pan ithe lagun -- requests.memory
+    limits.cpu: "1"                      #### "1" = 1 core
+    limits.memory: 1Gi                   #### 1 gibibyte== 1024  MB
 
-
+docker container stats container-id
 k describe ns                            ####it gives Quota and limitrange values here
 ###########40. Kubernetes ( In Hindi ) - LimitRange  
                                                     Sets min/max resource limits  for  pods in a namespace.
