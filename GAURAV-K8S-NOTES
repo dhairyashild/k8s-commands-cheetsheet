@@ -104,10 +104,32 @@ spec:
       targetPort: 9377
 ################################################################
 k explain --recursive deploy | less                                                  ---get all things @ any resoure
+
+strategy    <DeploymentStrategy>
+      rollingUpdate     <RollingUpdateDeployment>
+        maxSurge        <IntOrString>
+        maxUnavailable  <IntOrString>
+      type      <string>
+      enum: Recreate, RollingUpdate
+
+strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+
+strategy:    
+      type: Recreate    
 #############################################################################
 ################################################################30 DEPLOYMENT STRATEGIES
 
 ROLLINGUPDATE-- Create new rs and use max surge to add new pod then delete old pod
+             -- default strategy if not given-- 25% maxsurge & 25% max unavailable
+             -- To set limit of number of revisions : Bydefault its 10.
+spec:
+    replicas: 5
+    revisionHistoryLimit: 15      <------
+
 recreate-- delete all pods in old rs and create new all pod -- Downtime-- used in dev stage where no need of HA
 blue-green-
 canary--
