@@ -48,3 +48,56 @@ kubectl exec -it configmap-demo-pod -- env                   == NOT ENTER IN POD
 ### GAURAV
 k apply-f pod.yaml --namespace=prod           ----gaurav command to give ns by command
 k config set-context --current --namespace=NSNAME
+
+
+#   CONFIGMAP------db-ip , db-username , db-pass
+k create cm my-cm --from-literal=key1=value1 --from-literal=key1=value1
+k create cm my-cm --from-file=application.properties --from-file=FOLDERNAME       ---FOLDERNAME if large no. of files
+k create cm my-cm --from-env-file=config.env
+k edit cm my-cm
+k describe cm my-cm                ========== best to shows what in it
+
+
+# SECRETS ------same like above configmap
+kubectl create secret generic my-secret --from-literal=user=admin --from-literal=password=1234
+kubectl create secret generic my-secret --from-file=./secret-key.txt
+kubectl create secret generic my-secret --from-env-file=secrets.env
+kubectl get secret my-secret -o jsonpath='{.data.password}' | base64 --decode       -------Decode Secret (View Data)
+
+# for secret.yaml we must have     -n "     "  |  base64   -decode            ---o/p not add "  " also it just packs secret to encode
+echo "mysecret" | base64           # Includes \n → "bXlzZWNyZXQK" (wrong)
+echo -n "mysecret" | base64        # No \n    → "bXlzZWNyZXQ=" (correct)
+echo "bXlzZWNyZXQ=" | base64 --decode  # Outputs "mysecret" 
+
+k exec -it podname -- bash
+env 
+-----this give cm and secrets env in DECODED form
+
+k expain deployment --recursive | less
+env:  ------ for give 1 value
+envFrom:  ---------to give all cm / secret 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
