@@ -1,0 +1,23 @@
+I've spent over 4 years in DevOps and cloud. 
+
+Here’s a summary of 10 brutal troubleshooting facts I’ve learned:
+
+1) Check logs first, always – Logs contain the first clues; learn how to filter, search, and analyze them efficiently. 
+
+2) Trace the request flow – Understand how a request moves through the system to pinpoint failures faster. 
+
+3) Use process of elimination – Isolate components one by one to find the root cause instead of guessing. 
+
+4) Know the difference between infra and app issues – Is it a misconfigured server, network problem, or bad code? 
+
+5) Validate external dependencies – If your service relies on APIs, databases, or third-party tools, check their status. 
+
+6) Check system resource limits – Running out of memory, CPU, or disk can cause random failures. 
+
+7) Reproduce the issue in a test environment – If possible, recreate the failure to understand it better. 
+
+8) Keep a "known issues" doc – If something breaks often, document the fix so you (or others) don’t waste time. 
+
+9) Use health checks effectively – Proper liveness and readiness probes can detect and prevent hidden failures. 
+
+10) Know when to escalate – If you've checked the usual suspects and still can't fix it, don't waste time, get help. 
