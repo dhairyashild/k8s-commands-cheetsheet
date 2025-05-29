@@ -7,12 +7,15 @@ RULES---
 
 3---  all kind 1st letter CAPITAL eg. Deployment
 4-- mstly other all is small letters like labels ...
+
+
+
 apiVersion:                                      aV
 kind: Deployment                                 D                    
 metadata:
-  name: production-app
-  labels:                                         s
-    app: production-app
+  name: production-app                                  
+  labels:                                         s       ---- Identifies Deployment object itself (optional for most usecases)   
+    app: production-app                                                              
     environment: prod
     strategy: rollingupdate
 spec:
@@ -22,12 +25,12 @@ spec:
     rollingUpdate:
       maxSurge: 25%
       maxUnavailable: 1
-  selector:
+  selector:                                           ----- Tells Deployment which Pods to manage (required)
     matchLabels:
       app: production-app
   template:
     metadata:
-      labels:
+      labels:                                        ----  labels the created Pods 
         app: production-app
         environment: prod
     spec:
