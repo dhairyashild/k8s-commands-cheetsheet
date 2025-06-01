@@ -15,3 +15,30 @@ Q   how to choose deploy strategy
 on company need
 bluegreen & canary for 0 downtime but more resources
 rolling for 0 downtimetime 
+
+
+ I’ve interviewed 100+ DevOps engineers. Most of them say, “I’ve done K8s in production.”
+But when the real questions come in, they freeze.
+
+Here’s what I ask 👇
+
+🔥 1. How does DNS resolution work inside a pod?
+→ And what do you check when a service isn’t reachable by name?
+
+🔥 2. Walk me through what the controller manager does during a Deployment.
+→ Not rollout status. Reconciliation logic.
+
+🔥 3. What happens if a node with local storage gets autoscaled down?
+→ Be careful. This one causes data loss in prod more often than you’d think.
+
+🔥 4. Post-deploy, latency spikes for 30% of users. No errors. No logs. What now?
+→ Your answer reveals if you know how to triage chaos.
+
+🔥 5. How do you enforce runtime security in Kubernetes?
+→ PSP? AppArmor? OPA? Most people just hope for the best.
+
+🔥 6. HPA vs VPA vs Karpenter — when would you NOT use each?
+→ Bonus: How would you simulate HPA behavior in staging?
+
+🔥 7. Tell me about the last outage you debugged in Kubernetes.
+→ No postmortem? You weren’t really there.
