@@ -1,5 +1,12 @@
+## REVISION COMMANDS FROM BELOW ALL
+
 k run mypod --image=nginx --port=8080 --namespace=<namespace-name> --env=name=value                        ### IPNE
 kubectl create deploy deployname --image=nginx --port=80 --replicas=3  --namespace=my-namespace            ### IPRN
+kubectl rollout history deployment/frontend    
+k create cm my-cm --from-literal=key1=value1 --from-literal=key1=value1
+kubectl create secret generic my-secret --from-literal=user=admin --from-literal=password=1234
+=============================================================================================================================
+
 
 k label pod mypod --label=env=prod
 kubectl get pods --namespace=<insert-namespace-name-here>
