@@ -1,4 +1,5 @@
 k run mypod --image=nginx --port=8080 --namespace=<namespace-name> --env=name=value                        ### IPNE
+kubectl create deploy deployname --image=nginx --port=80 --replicas=3  --namespace=my-namespace            ### IPRN
 
 k label pod mypod --label=env=prod
 kubectl get pods --namespace=<insert-namespace-name-here>
