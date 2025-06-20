@@ -1,0 +1,25 @@
+
+Interview Cheat Sheet
+First Check: nslookup kubernetes.default (basic test).
+If Fails check:
+1. CoreDNS pods up?
+kubectl get pods -n kube-system -l k8s-app=kube-dns  # CoreDNS running?
+
+2. kube-dns Service IP correct?
+kubectl get svc -n kube-system kube-dns              # ClusterIP svc for above coredns-pod= kube-dns
+
+3. VPC DNS enabled?
+aws ec2 describe-vpcs --vpc-id <VPC-ID> --query "Vpcs[0].[EnableDnsHostnames, EnableDnsSupport]"
+
+Advanced:
+1. Check resolv.conf in failing pod. its auto-set in pods
+nameserver 10.100.0.10                  # CoreDNS ClusterIP
+search namespace.svc.cluster.local ...   # Search domains
+options ndots:5                         # Query behavior
+
+Verify no NetworkPolicy blocks DNS.
+kubectl get networkpolicies -A	                              #check Blocking UDP 53?
+
+One-Liner to Test Everything:
+kubectl run dns-test --image=busybox:1.28 --rm -it --restart=Never -- nslookup kubernetes.default.svc.cluster.local
+This covers all critical DNS components in EKS concisely! 
