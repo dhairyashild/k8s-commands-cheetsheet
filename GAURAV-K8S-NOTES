@@ -165,8 +165,8 @@ curl svcnav.nsnav.svc.cluster.local
 ####remember                        svc.ns                             SCL(.svc.cluster.local)     
 
 ##################################39. Kubernetes ( In Hindi ) - Resource Quota
-Compute Resource Quota----requests  limits cpu memory
-Object Count Quota ----pods , services, secrets, configmaps          link---  https://kubernetes.io/docs/concepts/policy/resource-quotas/
+Compute Resource Quota----limits.cpu , limits.memory	, requests.cpu	, requests.memory	
+Object Count Quota ----pods ,secrets, configmaps ,services, persistentvolumeclaims(PVC)         link---  https://kubernetes.io/docs/concepts/policy/resource-quotas/
 
 
 apiVersion: v1
@@ -182,13 +182,61 @@ spec:
     limits.memory: 1Gi                   #### 1 gibibyte== 1024  MB
 
 docker container stats container-id
-k describe ns                            ####it gives Quota and limitrange values here
+k describe ns                            ####it gives Quota and limitrange values USED + HARD
+
+Only Limits (no requests):
+Kubernetes automatically sets requests equal to limits
+
+Only Requests (no limits):
+The container can use unlimited resources (no upper bound), risking node resource exhaustion if unchecked.
+if resource-quta given then pod not created
+
 ###########40. Kubernetes ( In Hindi ) - LimitRange  
                                                     Sets min/max resource limits  for  pods in a namespace.
 k get limits/limitranges              #### both same
 k expalin limitrange | less                   ==== it gives apiversion , kind ...
 k api-resources | grep -i limits            ##### it gives short names used for that resource like limits   =limitranges
 
+LIMITS SETTING==
+- if pod LIMITS not given then it takes from DEFAULT in limitRange if limitrange not there then its keep same as limits in pod
+HOW POD SET RESOURCE LIMITS= 1)pod limits ---- 2)DEFAULT IN LIMITRANGE --- 3) KEEP SAME AS LIMITS IN POD
+
+REQUEST SETTING==
+- if pod REQUEST not given then it takes from DEFAULTREQUEST in limitRange
+HOW POD SET RESOURCE REQUESTS= 1)  pod REQUEST  ---- 2) DEFAULTREQUEST in limitRange  ---- 3) LimitRange default
+
+- If default is limit then how pod go for max
+default is only applied when Pod doesn't specify limits
+max is always enforced, even for Pods with explicit limits
 
 
 
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: production-resource-limits
+  namespace: your-namespace  # Always specify namespace
+spec:
+  limits:
+  - type: Container
+    # CPU settings (millicores)
+    min:
+      cpu: "100m"     # Minimum per container (0.1 core)
+    max:
+      cpu: "2000m"    # Maximum per container (2 cores)
+    default:
+      cpu: "500m"     # Default limit if not specified
+    defaultRequest:
+      cpu: "200m"     # Default request if not specified
+    
+    # Memory settings (MiB/GiB)
+    min:
+      memory: "128Mi"  # Minimum per container
+    max:
+      memory: "2Gi"    # Maximum per container
+    default:
+      memory: "512Mi"  # Default limit if not specified
+    defaultRequest:
+      memory: "256Mi"  # Default request if not specified
+    
+ 
