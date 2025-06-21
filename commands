@@ -84,16 +84,63 @@ env
 k expain deployment --recursive | less
 env:  ------ for give 1 value
 envFrom:  ---------to give all cm / secret 
+-------------------------------------------------------------------------------------------------------------
+
+k get events -n prod              = all events deto tya ns che
+type ——- 
+1  normal
+2 warning
 
 
+k logs -n prod deploy/deployname —timestamp
+k logs podname —since=10s
+k logs podname -follow
+-keep the log stream open and display new log entries in real-time
+-if u waiting certain events to test or check then use this
+
+----------------------------
+## PORT-FORWARD
+It creates a secure tunnel to a Kubernetes pod.
+It allows local access to cluster services3.
+It helps in application debugging and testing13.
+It enables secure database access and manipulation
+
+— k port-forward svc/svcname 8000:80
+8000=server port
+80= svc port 
+3000= pod exposed port
+— curl serverip:serverport
 
 
+extra commands with port-f..
+—- k port-forward pod/podname 8000:80
+-------------------------------------------------
 
+k auth whoami 
+Username           kubernetes-admin.
+Groups         [kubeadm: cluster-admins system:authenticated]
 
+controlplane yes kauth can i get pods-as-jane
+controlplane k auth can-i delete pods-as-jane
+по
+controlplanek auth can-i delete pods-as-system:serviceaccount:default:default
+no
+controlplanek auth can-i get pods-as-system:serviceaccount:default:defau3:53
+-----------------------------
+#  k top
 
+k top pods
+k get nodes -o wide
+k top nodes
+-------------------------------------
+#k logs deploy/d-name   —timestamp 
+                   USE = FIND ONLY JYAVELAT ERROR ALAY TEVDHECH LOG CHECK KARANE
 
-
-
+- k logs deploy/d-name              without
+- k logs deploy/d-name   —timestamp           with time
+-------------------------------------------------------------
+to see env var in pod
+k exec -it podname —printenv
 
 
 
