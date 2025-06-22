@@ -1,0 +1,5 @@
+WRONG                                                                     CORRECT                             FORGET
+
+
+nodeSelector:
+  tribe= qa                                                               tribe: qa                             :

@@ -1,0 +1,13 @@
+#Persistent Volume Claim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: web-app-pvc
+  namespace: production
+spec:
+  accessModes:
+    - ReadWriteOnce #Or ReadWriteMany if needed
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: gp2 #or your storage class

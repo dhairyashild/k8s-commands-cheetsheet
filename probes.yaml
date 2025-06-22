@@ -1,0 +1,73 @@
+link-----  https://www.youtube.com/watch?v=EF6c7MkOhkw
+
+######################
+Probing Customization in Kubernetes -
+            Probes ensure container health and readiness by monitoring startup, availability, and responsiveness of applications within pods.
+
+Default Values:
+initialDelaySeconds: Delay before the first probe runs (default: 0 seconds).
+periodSeconds: Frequency of probe execution after the initial delay (default: 10 seconds).
+timeoutSeconds: Time to wait for a probe response before marking it as failed (default: 1 second).
+failureThreshold: Number of consecutive failures before considering the container unhealthy (default: 3 retries).
+successThreshold: Number of consecutive successes required to mark the container healthy (default: 1 success).
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod
+spec:
+  containers:
+  - name: example-container
+    image: nginx
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 5       # Waits 5 seconds before the first check.
+      periodSeconds: 10           # Checks every 10 seconds.
+      timeoutSeconds: 2           # Fails if no response within 2 seconds.
+      failureThreshold: 3         # Restarts after 3 consecutive failures.
+    readinessProbe:
+      httpGet:
+        path: /readiness
+        port: 8080
+      initialDelaySeconds: 5       # Waits before checking readiness.
+      periodSeconds: 10           # Checks readiness every 10 seconds.
+
+
+##############
+Startup Probe:
+           - Ensure container starts successfully before readiness/liveness checks.
+           - When to Use Startup Probes:   Slow-Starting Applications otherwise below 2 only can be applied for fast starting apps
+
+startupProbe:  
+  httpGet:  
+    path: /startup  
+    port: 8080  
+  failureThreshold: 30  
+  periodSeconds: 10  
+
+##############################
+
+Readiness Probe:
+                Confirm container can serve traffic.
+
+readinessProbe:  
+  httpGet:  
+    path: /ready  
+    port: 8080  
+  initialDelaySeconds: 5  
+  periodSeconds: 10  
+#######################################
+
+Liveness Probe:
+                Restart container if it becomes unresponsive.
+
+livenessProbe:  
+  httpGet:  
+    path: /health  
+    port: 8080  
+  initialDelaySeconds: 15  
+  periodSeconds: 20  
+###########################
+

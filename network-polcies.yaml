@@ -1,0 +1,167 @@
+####step1--Default Deny Policy (Single Namespace):
+##### remember 
+ ingress:
+  - from:
+
+egress:
+  - to:
+
+# {}  means all pod
+# if policy type have both ingrss + egress means both policy applied in same yaml but for best practice we divide ingress and egress for better control on policies except all deny given in same yaml
+# # kubernetes.io/metadata.name:         is a special label that applies only to namespaces. Not other object like pod /deploy/svc
+
+
+
+
+# default-deny-app.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all
+  namespace: app-ns
+spec:
+  podSelector: {}          
+  policyTypes:
+  - Ingress
+  - Egress
+---
+
+
+
+# frontend-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-ingress
+  namespace: app-ns
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+      tier: web
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector: {}              # {} == all pods
+      namespaceSelector:
+        matchLabels:
+          app: ingress-controller  # this Loadbalaner controller pod namaspace label
+    ports:
+    - protocol: TCP
+      port: 80
+    - protocol: TCP
+      port: 443
+---
+# frontend-egress-backend.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-egress-backend
+  namespace: app-ns
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+      tier: web
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: backend
+          tier: backend
+      namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: app-ns # restrict to the same namespace
+    ports:
+    - protocol: TCP
+      port: 8080
+##################################################################################################
+
+# BACKEND PODS
+
+---
+# backend-ingress-frontend.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-backend-ingress-frontend
+  namespace: app-ns
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+      tier: backend
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+          tier: web
+      namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: app-ns # restrict to the same namespace
+    ports:
+    - protocol: TCP
+      port: 8080
+---
+# backend-egress-database.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-backend-egress-database
+  namespace: app-ns
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+      tier: backend
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: database
+          tier: database
+      namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: app-ns    # kubernetes.io/metadata.name:         is a special label that applies only to namespaces. Not other object like pod /deploy/svc
+    ports:
+    - protocol: TCP
+      port: 3306
+---
+######################################################################################################
+
+
+#DB PODS POLICY with no egress as DB not need egress mostly
+
+# database-ingress-backend.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-database-ingress-backend
+  namespace: app-ns
+spec:
+  podSelector:
+    matchLabels:
+      app: database
+      tier: database
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: backend
+          tier: backend
+      namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: app-ns # restrict to the same namespace
+    ports:
+    - protocol: TCP
+      port: 3306

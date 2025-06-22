@@ -1,0 +1,15 @@
+apiVersion: v1                                        # error  == capital V
+kind: Pod                                             # error  == small p        
+metadata:
+  name: mydeploy
+  labels:                                             # error  == label                  ADD s    
+    app: prod
+spec:
+  containers:
+  - name: c1
+    image: ubuntu
+    env:
+    - name: name
+      value: pod
+    command: ["/bin/bash"]                             # error  == commmands                 NO  s
+    args: ["-c","sleep infinity"]

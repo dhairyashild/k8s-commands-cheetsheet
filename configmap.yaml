@@ -1,0 +1,11 @@
+# ConfigMap for application configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-app-config
+  namespace: production
+data:
+  app.properties: |
+    application.name=MyWebApp
+    application.version=1.0.0
+    feature.flag=true

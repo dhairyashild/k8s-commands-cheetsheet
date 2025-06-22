@@ -1,0 +1,119 @@
+https://kubernetes.io/docs/concepts/workloads/pods/downward-api/
+
+###code to remember -- not get on k8s.io
+ env
+ - name: APP_LABEL
+      valueFrom:
+        fieldRef:                              ####fieldPath:  —-it gives pod level env to pod eg. pod name , label, ns, pod ip
+          fieldPath: metadata.labels['app']
+    - name: CPU_REQUEST
+      valueFrom:
+        resourceFieldRef:                       ####resourceFieldRef :  —-for container level env vars as downward api EG.it can give resource {cpu , memory} related request limit only
+          containerName: main-container
+          resource: requests.cpu
+
+
+
+Here's a list of the most commonly used names from the downward API, focusing on their environment variable or volume file representation:
+
+Environment Variables:
+POD_NAME
+POD_NAMESPACE
+NODE_NAME
+POD_IP
+CPU_REQUEST
+MEMORY_REQUEST
+CPU_LIMIT
+MEMORY_LIMIT
+SERVICE_ACCOUNT_NAME
+HOST_IP
+POD_UID
+
+
+Volume Files (within mounted downwardAPI volume):
+labels
+annotations
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: downward-api-example
+  labels:
+    app: myapp
+  annotations:
+    team: devops
+spec:
+  containers:
+  - name: main-container
+    image: busybox
+    command: ["sh", "-c", "env && cat /etc/podinfo/labels && cat /etc/podinfo/annotations && sleep infinity"]
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "512Mi"
+    env:
+    - name: POD_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.name
+    - name: POD_NAMESPACE
+      valueFrom:
+        fieldRef:                                   ####fieldPath:  —-it gives pod level env to pod eg. pod name , label, ns, pod ip
+          fieldPath: metadata.namespace
+    - name: POD_UID
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.uid
+    - name: NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+    - name: SERVICE_ACCOUNT
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.serviceAccountName
+    - name: HOST_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.hostIP
+    - name: POD_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.podIP
+    - name: TEAM_ANNOTATION
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.annotations['team']
+    - name: APP_LABEL
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.labels['app']
+    - name: CPU_REQUEST
+      valueFrom:
+        resourceFieldRef:                                  ####resourceFieldRef :  —-for container level env vars as downward api (=give info to own pod)
+          containerName: main-container
+          resource: requests.cpu
+    - name: MEMORY_LIMIT
+      valueFrom:
+        resourceFieldRef:
+          containerName: main-container
+          resource: limits.memory
+    volumeMounts:
+    - name: podinfo
+      mountPath: /etc/podinfo
+      readOnly: false
+  volumes:
+  - name: podinfo
+    downwardAPI:
+      items:
+      - path: "labels"
+        fieldRef:
+          fieldPath: metadata.labels
+      - path: "annotations"
+        fieldRef:
+          fieldPath: metadata.annotations

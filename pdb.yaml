@@ -1,0 +1,44 @@
+#link-- https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+Pod Disruption Budget (PDB) - Key Notes for DevOps (Shortest):
+Purpose: Ensures high availability by limiting the number of pods disrupted during voluntary actions like upgrades or scaling
+
+How PDB Works:
+-Enforces rules (e.g., minAvailable: 2) to block disruptions if they would reduce pods below the threshold. 
+-Kubernetes respects these constraints during voluntary disruptions like node drains or upgrades.
+-Example: If minAvailable: 2 and draining a node , drain stalls until additional replicas are rescheduled elsewhere.
+-min avail and max unavail cant use together
+
+Types of disruptions ==
+voluntary disruptions (admin/app owner)
+• Draining a node (repair/upgrade).
+• Removing a pod from a node to replace something
+• Directly delete pod (accidentally)
+
+Involuntary disruptions (unavoidable)
+• a hardware failure
+• admin deletes VM by mistake
+
+
+
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: my-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: my-app                                 #### this label must match matchlabel section in Deployment
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+spec:
+  template:
+    metadata:
+      labels:
+        app: my-app  # <--- MATCHES THE PDB's SELECTOR
+    # ... rest of the deployment
+

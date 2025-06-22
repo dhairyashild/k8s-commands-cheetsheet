@@ -1,0 +1,103 @@
+Immutable Fields--:  cannot be changed once a Kubernetes resource is created. Attempting to modify these fields results in a "Field is Immutable" error.
+EG-metadata.name of any resource.
+  -spec.selector in Deployments.
+
+Rollout Change Fields--: those modifications within a Deployment's pod template that trigger a rolling update. 
+                        This means Kubernetes will gradually replace existing pods with new ones reflecting the changes.
+
+
+MAIN DIFFERENCE====: Immutable fields require manual deletion and recreation, while rollout change fields are updated automatically through a rolling update.
+EG-temlate in deploy, change cause in annotation
+
+
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prod-webapp  # Immutable: Cannot be changed once created
+  namespace: production  # Immutable: Namespace cannot be changed after creation
+  labels:
+    app: webapp
+    environment: production
+  annotations:
+    kubernetes.io/change-cause: "Initial deployment v1.0.0"  # Metadata field, does not trigger rollout
+
+spec:
+  replicas: 5  # Rollout-causing: Changing the number of replicas triggers scaling, not a rollout
+  selector:
+    matchLabels:
+      app: webapp  # Immutable: Cannot be changed once created
+      environment: production  # Immutable: Cannot be changed once created
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%  # Rollout-causing: Changes to strategy trigger a new rollout
+      maxUnavailable: 15%  # Rollout-causing
+
+  template:
+    metadata:
+      labels:
+        app: webapp
+        environment: production
+        version: v1.0.0  # Rollout-causing: Changing labels in the pod template triggers a rollout
+    spec:
+      containers:
+      - name: webapp-container
+        image: registry.prod/webapp:v1.0.0  # Rollout-causing: Updating the image triggers a rollout
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080  # Rollout-causing: Changing ports triggers a rollout
+          protocol: TCP
+
+        env:
+        - name: APP_ENVIRONMENT
+          value: "production"  # Rollout-causing: Modifying environment variables triggers a rollout
+
+        resources:
+          requests:
+            cpu: "500m"  # Rollout-causing: Changes to resource requests/limits trigger a rollout
+            memory: "256Mi"
+          limits:
+            cpu: "1000m"
+            memory: "512Mi"
+
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 20  # Rollout-causing: Modifying probe configurations triggers a rollout
+
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10  # Rollout-causing
+
+      nodeSelector:
+        node-type: high-performance-nodes  # Rollout-causing if changed, as it modifies pod scheduling
+
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "webapp"
+        effect: "NoSchedule"
+
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: webapp
+              topologyKey: "kubernetes.io/hostname"  # Rollout-causing if modified
+
+      volumes:
+      - name: config-volume
+        configMap:
+          name: webapp-config-map  # Rollout-causing if volume source changes (e.g., ConfigMap or Secret)
+

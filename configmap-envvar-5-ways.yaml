@@ -1,0 +1,76 @@
+#####imp points
+--REMEMBER if STARTING WORD-- envFrom: means full cm , env: mean 1 key  , volumeMounts: means also full cm or if key as items given
+
+1) give full configmap                     2) gives 1st=direct env/2nd=key/3rd=downward api         3) give volumes
+
+envFrom:                                       env:                                                  volumeMounts:  
+        - configMapRef:                             - name: PLAYER_INITIAL_LIVES
+            name: myconfigmap                         valueFrom:
+                                                        configMapKeyRef:   
+                                                          name: game-demo
+                                                          key: player_initial_lives 
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-env
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-env
+  template:
+    metadata:
+      labels:
+        app: nginx-env
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        
+        env:
+        # Method 1: Direct Assignment (MESSAGE)
+        - name: MESSAGE
+          value: "Hello from environment variable!"
+        
+        # Method 2: Field Reference (POD_NAME)
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        
+        # Method 3: ConfigMap Key Reference (CONFIG_MESSAGE)
+        - name: CONFIG_MESSAGE
+          valueFrom:
+            configMapKeyRef:
+              name: my-configmap
+              key: message
+        
+        # Method 4 and Method 5 will use a mounted volume from ConfigMap and Secrets
+        
+        # Command to demonstrate all environment variables
+        command: ["/bin/sh", "-c"]
+        args: [
+          "echo $MESSAGE && echo My Pod Name is $POD_NAME && echo $CONFIG_MESSAGE && cat /etc/config/message && sleep infinity"
+        ]
+        
+        # Volume Mount for ConfigMap (Method 4)
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config
+
+      # Volumes Section for ConfigMap (Method 4)
+      volumes:
+      - name: config-volume
+        configMap:
+          name: my-configmap
+
+---
+# Define the ConfigMap used in Methods 3 and 4
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap
+data:
+  message: "Hello from ConfigMap!"
