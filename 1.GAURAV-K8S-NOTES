@@ -1,7 +1,9 @@
 service(tps)     ==   v1 , ports:   ports is a list so use -   , protocol: TCP (कॅपिटल)  , type: NodePort / clusterIp / LoadBalancer  ,protocol
-deployment(rst=r sm tmlsc   ==  apps/v1                 ,containers: env: & ports:  =app 3 are list so use -
+deployment(rst=r sm tmlsc   ==  apps/v1                 ,containers: env: & ports:  =app 3 are list so use -     , #  " cpu/memory " अल्पविराम हवा
 ingress      ==  networking.k8s.io/v1
-
+configmap — non sensitive store
+secret - sensitive
+kubectl - cli to mng k8s resource
 
 
 13  vid -- SET ENV remember this only ==        env:  - name:   value:/valueFrom:             k exec -it podnav -c containernav -- env
@@ -91,19 +93,22 @@ k label pod busybox key=value
 k expose pod busybox --port=8080 --target-port=80                   ####clusterip
 k expose pod busybox --type=NodePort --port=8080 --target-port=80     ####nodeport
 k curl busybox:8000                                    #### port of svc need for curl
+curl http://nodeip:32000               # check nodeport on local m/c
+
 
 apiVersion: v1
 kind: Service
 metadata:
   name: my-service
 spec:
+  type: NodePort / ClusterIP / LoadBalancer                               /    clusterIP: None     ==== this for headless svc
   selector:
     app.kubernetes.io/name: MyApp                     ####  (add key: value here)
   ports:
     - name: http
       protocol: TCP
       port: 80
-      targetPort: 9376
+      targetPort: 9376              # if targetport not given copy from ports here as targetport
     - name: https
       protocol: TCP
       port: 443
@@ -141,7 +146,7 @@ blue-green-
 canary--
 
 #######################################32 33 Kubernetes ( In Hindi ) - Resource Request     
-####remember                         resources -----requests/limits------    cpu/memory add word by me
+####remember                         resources -----requests/limits------   " cpu/memory " अल्पविराम हवा add word by me
 ####remember                  free -m                    ==========shows how much memory avail on ur node so u can use remaining for pod
 #### limits use for 1 microservice load not impact other
 
@@ -158,7 +163,7 @@ spec:
         - containerPort: 80 
         resources:
           requests:
-            memory: "64Mi"
+            memory: "64Mi"                #  " cpu/memory " अल्पविराम हवा
             cpu: "250m"
           limits:                          ## cpu and memory added by me if copy from k explain --recursive
             memory: "128Mi"                ## not use m (megabyte) use only Mi (mebibyte-binary1024) 
