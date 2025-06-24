@@ -1,0 +1,12 @@
+ns
+
+/etc/kubernetes/manifest      --- kube-api-server.yaml  
+
+default roles/ clusterroles
+
+  kubesystem all pods and their use
+
+slave node access 
+kubelet , 
+kubeproxy
+runtime
