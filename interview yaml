@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-webapp-deployment
+  labels:
+    app: my-webapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-webapp
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: my-webapp
+    spec:
+      containers:
+      - name: my-webapp-container
+        image: nginx:1.23.0
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "500m"
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"
+        volumeMounts:
+        - name: my-data-volume
+          mountPath: /usr/share/nginx/html
+          readOnly: false
+      volumes:
+      - name: my-data-volume
+        persistentVolumeClaim:
+          claimName: my-pvc
+      affinity: # येथे 'nodeSelector' ऐवजी 'affinity' वापरले आहे
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution: # हार्ड रिक्वायरमेंट: पॉड या नियमांशिवाय शेड्यूल होणार नाही
+            nodeSelectorTerms:
+            - matchExpressions: # येथे एक किंवा अधिक एक्सप्रेशन्स वापरू शकता
+              - key: disktype
+                operator: In # 'In', 'NotIn', 'Exists', 'DoesNotExist', 'Gt', 'Lt'
+                values:
+                - ssd
+              - key: topology.kubernetes.io/zone # उदाहरण: विशिष्ट Availability Zone
+                operator: In
+                values:
+                - us-east-1a
+                - us-east-1b
+          preferredDuringSchedulingIgnoredDuringExecution: # सॉफ्ट प्रेफरन्स: शक्य असल्यास या नोड्सना प्राधान्य मिळेल
+            - weight: 1 # 1-100 पर्यंत वजन, जास्त वजन म्हणजे जास्त प्राधान्य
+              preference:
+                matchExpressions:
+                - key: environment
+                  operator: In
+                  values:
+                  - production
