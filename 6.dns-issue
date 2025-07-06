@@ -38,4 +38,25 @@ One-Liner to Test Everything:
 kubectl run dns-test --image=busybox:1.28 --rm -it --restart=Never -- nslookup kubernetes.default.svc.cluster.local
 This covers all critical DNS components in EKS concisely! 
 
+#####################################################
 
+| Step | Component               | What It Does                                                                                      |
+|------|------------------------|---------------------------------------------------------------------------------------------------|
+| 1    | User/kubectl           | User creates a Deployment YAML or runs a kubectl command to define the desired state.             |
+| 2    | API Server             | Receives the request and validates it.                                                            |
+| 3    | etcd                   | API server stores the Deployment object and its configuration in etcd (the cluster’s key-value store). |
+| 4    | Informer+Watch Loop    | Detects the new Deployment object via real-time updates from the API server.                      |
+| 5    | Deployment Controller  | Reconciliation loop is triggered; compares desired vs. actual state.                              |
+| 6    | Deployment Controller  | Creates or updates a ReplicaSet to match the desired number of pods.                              |
+| 7    | etcd                   | Stores the new ReplicaSet object and its configuration.                                           |
+| 8    | ReplicaSet Controller  | Ensures the correct number of pods exist by creating new pods as needed.                          |
+| 9    | etcd                   | Stores new Pod objects and their configurations.                                                  |
+| 10   | Scheduler              | Assigns new pods to appropriate nodes in the cluster.                                             |
+| 11   | Kubelet                | On each node, pulls the container image and starts the pod.                                       |
+| 12   | Controller Manager     | Continuously monitors and reconciles to maintain the desired state.                               |
+
+Informer/Watch Loop: Detects changes in real time and triggers controllers.
+
+Reconciliation: Controllers always work to match the cluster's actual state to the user’s desired state.
+
+Event Handler: Each change (add, update, delete) triggers specific logic in the controllers to take action.
