@@ -60,3 +60,64 @@ Informer/Watch Loop: Detects changes in real time and triggers controllers.
 Reconciliation: Controllers always work to match the cluster's actual state to the user’s desired state.
 
 Event Handler: Each change (add, update, delete) triggers specific logic in the controllers to take action.
+#################################################################
+
+How would you simulate HPA behavior in staging without real traffic?
+
+Generate Artificial Load
+Run a load generator pod (such as BusyBox) to simulate traffic or resource usage. 
+This repeatedly sends requests to your service, increasing CPU usage and triggering the HPA.
+
+kubectl run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://<service-name>; done"
+
+####################################
+
+
+## Enforcing runtime security in Kubernetes requires multiple controls:
+
+PodSecurityPolicy (PSP): Legacy, deprecated; do not rely on it for new clusters.
+
+OPA/Gatekeeper & Kyverno: Use these admission controllers to enforce custom security policies on pod specs (e.g., block privileged containers, enforce image sources).
+
+AppArmor/Seccomp: Apply kernel-level profiles to restrict container permissions and system calls at runtime.
+                  AppArmor controls what files, programs, and system actions a container or pod can access or use on the node by applying security profiles at the kernel level.
+1. Write and load the AppArmor profile on all nodes:
+First, create your AppArmor profile and load it on each cluster node (using tools like apparmor_parser or with management tools).
+2. Reference the profile in your Pod YAML using annotations:
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello-apparmor
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/hello: localhost/k8s-apparmor-example-deny-write              ####
+spec:
+
+
+RBAC: Controls API access, but alone does not protect running pods from runtime threats.
+
+Network Policies: Restrict pod-to-pod and external traffic to limit lateral movement.
+
+Runtime monitoring (e.g., Falco): Detect and respond to suspicious activity in running containers.
+##################################################################
+
+Highly Available EKS Cluster — Key Steps (Short):
+
+Multi-AZ Control Plane:
+EKS automatically runs the control plane across multiple Availability Zones for resilience.
+
+Distribute Worker Nodes:
+Deploy worker nodes across at least three AZs to avoid single points of failure and ensure workload continuity.
+
+Auto Scaling:
+Use EC2 Auto Scaling groups or Cluster Autoscaler for dynamic node scaling and self-healing.
+
+Pod Anti-Affinity:
+Set pod anti-affinity rules to spread replicas across nodes and AZs for maximum redundancy.
+
+Load Balancers:
+Use AWS load balancers (ELB/ALB) to distribute traffic across healthy nodes and AZs.
+
+Backup and Disaster Recovery:
+Regularly back up etcd and have a disaster recovery plan for cluster state and workloads.
+
+Monitoring:
