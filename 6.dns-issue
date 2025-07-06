@@ -1,3 +1,17 @@
+Step  What Happens
+1  Pod/service created, DNS record auto-generated
+2  Pod sends DNS queries to CoreDNS using the nameserver set in /etc/resolv.conf
+3  Pod queries DNS for service/pod name
+- Service DNS Naming Convention
+<service-name>.<namespace>.svc.cluster.local
+- Pod DNS Naming Convention=
+<pod-ip-address>.<namespace>.pod.cluster.local
+4  CoreDNS resolves name using Kubernetes API
+5  IP address is returned to the querying pod
+6  For external names, CoreDNS forwards to upstream
+
+
+
 
 Interview Cheat Sheet
 First Check: nslookup kubernetes.default (basic test).
@@ -13,7 +27,7 @@ aws ec2 describe-vpcs --vpc-id <VPC-ID> --query "Vpcs[0].[EnableDnsHostnames, En
 
 Advanced:
 1. Check resolv.conf in failing pod. its auto-set in pods
-nameserver 10.100.0.10                  # CoreDNS ClusterIP
+nameserver 10.100.0.10                  # Pod sends DNS queries to CoreDNS using the nameserver set in /etc/resolv.conf
 search namespace.svc.cluster.local ...   # Search domains
 options ndots:5                         # Query behavior
 
@@ -23,3 +37,5 @@ kubectl get networkpolicies -A	                              #check Blocking UDP
 One-Liner to Test Everything:
 kubectl run dns-test --image=busybox:1.28 --rm -it --restart=Never -- nslookup kubernetes.default.svc.cluster.local
 This covers all critical DNS components in EKS concisely! 
+
+
