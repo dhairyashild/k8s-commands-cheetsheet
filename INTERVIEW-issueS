@@ -161,14 +161,131 @@ By prom and grafana
 
 
 
+Expertise in implementing and managing monitoring solutions using Grafana and Prometheus?
+############################################################################
+
+. What if Your Service Works in Staging, but Not Production?give solution for eks stepwise and at last give stepwise summery also
+3. What if Your Service Works in Staging, but Not Production?give solution for eks stepwise and at last give stepwise summery also
+What If Your Service Works in Staging, but Not in Production? (EKS Solution)
+When your service works in staging but fails in production on Amazon EKS, follow these stepwise troubleshooting and solution steps:
+
+Stepwise Troubleshooting for EKS
+1. Confirm the Problem
+Identify the specific symptoms (timeouts, 5xx errors, connectivity issues).
+
+Check if the problem is consistent or intermittent, and which users or endpoints are affected.
+
+2. Compare Staging and Production Environments
+Review Kubernetes versions, node types, resource limits, and configuration differences between staging and production.
+
+Ensure that both environments have matching configurations for critical components (e.g., environment variables, secrets, config maps, IAM roles).
+
+3. Check Service and Endpoint Health
+Use:
+
+kubectl get svc <service-name>
+
+kubectl get endpoints <service-name>
+
+Ensure all expected pods are registered as healthy endpoints in production.
+
+4. Validate Networking and Security
+Examine VPC, subnet, and security group settings for production.
+
+Confirm that required ports are open and network policies permit necessary traffic.
+
+Check for differences in ingress/egress rules between environments.
+
+5. Inspect Load Balancer and DNS
+Verify that the AWS load balancer is correctly configured and targets healthy pods.
+
+Ensure DNS records resolve correctly to the production service.
+
+6. Review Pod and Node Logs
+Use:
+
+kubectl describe pod <pod-name>
+
+kubectl logs <pod-name>
+
+Look for errors, restarts, or readiness/liveness probe failures in production pods.
+
+7. Check IAM Roles and Permissions
+Ensure the production environment has the correct IAM roles and policies for accessing AWS resources (e.g., S3, RDS, ECR).
+
+8. Resource Limits and Scaling
+Compare CPU, memory, and pod quotas between staging and production.
+
+Check for resource exhaustion or scheduling failures in production.
+
+9. Validate External Dependencies
+Confirm that production services can reach required external APIs, databases, or third-party services.
+
+Check secrets and credentials for correctness.
+
+10. Monitor and Collect Metrics
+Use AWS CloudWatch, Prometheus, or other monitoring tools to compare metrics between environments.
+
+Look for anomalies in latency, error rates, or resource usage.
+
+11. Test with Staging Traffic in Production
+If possible, replay staging traffic patterns in production (with caution) to reproduce the issue.
+
+12. Rollback or Hotfix
+If the issue is critical and cannot be quickly resolved, consider rolling back to a previous stable deployment in production.
 
 
 
+############################################################################
+5. What if a Node Goes NotReady, but the Kubelet Logs Are 
+Clean?
+ This is one of the most misleading situations:
+ node status is NotReady
+ but journalctl -u kubelet shows nothing alarming
 
 
-
-
-
+✅
+ Inspect node conditions
+ kubectl describe node <node>
+ look for DiskPressure
+ MemoryPressure
+ NetworkUnavailable
+ ✅
+ Check Kubernetes events
+ kubectl get events --field-selector involvedObject.kind=Node
+ ✅
+ Check container runtime
+ ✅
+ journalctl -u containerd
+ docker info if Docker
+ check disk usage in /var/lib/kubelet
+ Inspect CNI plugin
+ Logs for CNI pods
+ bridge interfaces on the node
+ ✅
+ Check kube-proxy
+ kubectl logs -n kube-system <kube-proxy-pod>
+ validate iptables rules
+ ✅
+ Node-level resource issues
+ top for load
+ df -h for disk
+ dmesg for kernel events
+ ✅
+ Cloud-specific
+ hypervisor maintenance
+ autoscaler scale-downs
+ cloud provider instance status
+ ✅
+ Remediate
+ cordon the node: kubectl cordon <node>
+ drain:
+ bash
+ CopyEdit
+ kubectl drain <node> --ignore-daemonsets --delete-emptydir-data
+ replace or investigate offline
+ NotReady doesn’t always mean kubelet is broken — think bigger: runtime, network, or even the 
+cloud node itself
 
 
 
