@@ -8,6 +8,8 @@ configmap — non sensitive store
 secret - sensitive
 kubectl - cli to mng k8s resource
 
+Dploy strategies== R R B C
+
 
 13  vid -- SET ENV remember this only ==        env:  - name:   value:/valueFrom:             k exec -it podnav -c containernav -- env
 
