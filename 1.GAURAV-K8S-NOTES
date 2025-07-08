@@ -2,6 +2,7 @@ service(tps)     ==   v1 , ports:   ports is a list so use -   , protocol: TCP (
 deployment(rst=r sm tmlsc   ==  apps/v1                 ,containers: env: & ports:  =app 3 are list so use -     , #  " cpu/memory " अल्पविराम हवा
 DEPLOY AND BOTH HAVE ---selector:  is coreect      ,   IN DEPLOYMENT -- labels is correct everywhere             
                         selectors: is wrong                             labels: is wrong
+सिलेक्टर अकेला आता है in both svc and deploy
 ingress      ==  networking.k8s.io/v1
 configmap — non sensitive store
 secret - sensitive
