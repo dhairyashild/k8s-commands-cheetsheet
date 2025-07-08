@@ -1,3 +1,33 @@
+1 COREDNS --pod ask- coredns(/etc/resolve.conf)--coredns resolve svc-ns-S-C-L ---return IP to pod
+
+2  2 POD CREATION LIFECYCLE
+kubectl/user --- apiserver -- etcd --informer+watchloop---deployment controller triger reconcilation loop -cretae RS+pod 
+--stores info etcd-- scheduler -- kubelet --
+
+3 HPA CHECK 
+Generate Artificial Load
+
+4 Highly Available EKS Cluster — Key Steps (Short):
+HPA
+CLUSTER AUTOSCALER 
+DEPLOY /RS
+PDB
+
+6 ROLLOUT ===HIISORY==UNDSTATUS
+✅
+ If still stuck==
+ Check container images
+ Verify ConfigMaps and Secrets
+ Validate readiness and liveness probes
+ Confirm RBAC and NetworkPolicies aren’t blocking traffic
+
+
+
+
+
+#############################################################################
+1 COREDNS
+
 Step  What Happens
 1  Pod/service created, DNS record auto-generated
 2  Pod sends DNS queries to CoreDNS using the nameserver set in /etc/resolv.conf
@@ -40,6 +70,9 @@ This covers all critical DNS components in EKS concisely!
 
 #####################################################
 
+2 POD CREATION LIFECYCLE
+
+
 | Step | Component               | What It Does                                                                                      |
 |------|------------------------|---------------------------------------------------------------------------------------------------|
 | 1    | User/kubectl           | User creates a Deployment YAML or runs a kubectl command to define the desired state.             |
@@ -62,7 +95,7 @@ Reconciliation: Controllers always work to match the cluster's actual state to t
 Event Handler: Each change (add, update, delete) triggers specific logic in the controllers to take action.
 #################################################################
 
-How would you simulate HPA behavior in staging without real traffic?
+3 How would you simulate HPA behavior in staging without real traffic?
 
 Generate Artificial Load
 Run a load generator pod (such as BusyBox) to simulate traffic or resource usage. 
@@ -72,7 +105,7 @@ kubectl run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin
 
 ####################################
 
-
+4
 ## Enforcing runtime security in Kubernetes requires multiple controls:
 
 PodSecurityPolicy (PSP): Legacy, deprecated; do not rely on it for new clusters.
@@ -99,7 +132,7 @@ Network Policies: Restrict pod-to-pod and external traffic to limit lateral move
 
 Runtime monitoring (e.g., Falco): Detect and respond to suspicious activity in running containers.
 ##################################################################
-
+5
 Highly Available EKS Cluster — Key Steps (Short):
 
 Multi-AZ Control Plane:
@@ -121,3 +154,103 @@ Backup and Disaster Recovery:
 Regularly back up etcd and have a disaster recovery plan for cluster state and workloads.
 
 Monitoring:
+By prom and grafana
+#################################################################
+6 Can You Fix a Stuck Rollout with kubectl rollout undo?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
