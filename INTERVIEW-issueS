@@ -288,8 +288,19 @@ Clean?
 cloud node itself
 
 
+############################################################################
 
+EKS vs. ECS: 3 Most Important Differences
+Orchestration
+Runs Kubernetes (open-source, industry standard, portable)	
+Uses AWS’s proprietary orchestration engine
 
+Flexibility
+supports multi-cloud, 
+deeply integrated with AWS
+
+Cost & Complexity
+More complex to operate; incurs extra control plane cost ($70/mo)	Easier to use, no control plane cost, faster to start
 
 
 
