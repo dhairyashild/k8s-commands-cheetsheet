@@ -302,16 +302,30 @@ deeply integrated with AWS
 Cost & Complexity
 More complex to operate; incurs extra control plane cost ($70/mo)	Easier to use, no control plane cost, faster to start
 
+############################################################################
+MEMORY
 
+High MEMORY Usage/OOM Errors:
+-leading to slow performance or 
+-crashes when memory is exhausted.
 
+SOLUTION :
+Tune JVM Options:
+-Adjust Java Virtual Machine (JVM) memory settings (like -Xmx, -Xms) and 
+-garbage collection parameters to optimize resource usage.
 
+############################################################################
+CPU
 
+-causing application slowdowns or unresponsiveness.
 
+SOLUTION :
 
-
-
-
-
+-kubectl top pods, kubectl describe pod== to verify real-time CPU usage
+-Optimize inefficient code, algorithms, or thread usage to reduce unnecessary CPU consumption.
+-Scale up resources by increasing CPU limits/requests or adding more replicas if the load is legitimate and sustained.
+-Review deployment and resource configurations in version control and CI/CD to ensure changes are tracked and tested before production rollout
+-Set up Grafana alerts for CPU thresholds to notify the team of future spikes.
 
 
 
