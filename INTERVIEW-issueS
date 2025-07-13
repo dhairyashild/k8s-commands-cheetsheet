@@ -327,10 +327,15 @@ SOLUTION :
 -Review deployment and resource configurations in version control and CI/CD to ensure changes are tracked and tested before production rollout
 -Set up Grafana alerts for CPU thresholds to notify the team of future spikes.
 
+############################################################################
 
 
 
+kubeconfig--
 
+Cluster field: Contains Kubernetes API server URL and cluster info.
+Context field: Connects user, cluster, and namespace settings.
+Users field: Stores authentication details like certificates or tokens.
 
 
 
