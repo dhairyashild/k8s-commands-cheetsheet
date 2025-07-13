@@ -1,5 +1,6 @@
-/16 = 65000 ip
-
+/16	65,536
+/19	8,192
+/24	256
 1 COREDNS --pod ask- coredns(/etc/resolve.conf)--coredns resolve svc-ns-S-C-L ---return IP to pod
 
 2  2 POD CREATION LIFECYCLE
