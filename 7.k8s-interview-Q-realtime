@@ -103,3 +103,32 @@ kubeconfig--
 Cluster field: Contains Kubernetes API server URL and cluster info.
 Context field: Connects user, cluster, and namespace settings.
 Users field: Stores authentication details like certificates or tokens.
+
+
+
+
+Deployment strategies you should know as a Devops Engineer:
+
+1. Recreate
+- delete all instances then add all instance 
+- downtime
+
+2. Rolling update
+- replace gradually 
+- zero downtime 
+- production based app
+
+3. Blue green deployment 
+- 2 environments are created
+- blue - old instance, green - new instance 
+- no downtime 
+- high cost
+- high level of testing is required
+
+4. Canary deployment 
+- 2 environments are created
+- a small number of users migrated to a new app 
+- no downtime 
+- high cost
+- high level of testing is required 
+
