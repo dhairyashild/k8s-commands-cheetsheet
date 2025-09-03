@@ -1,3 +1,16 @@
+| Key Point          | Amazon EKS                     | Self-Managed Kubernetes          |
+|--------------------|-------------------------------|---------------------------------|
+| Management         | Fully managed by AWS           | User manages everything          |
+| Updates & Patching | Automatic security patches&upgrades| Manual setup required        |
+| High Availability  | Built-in multi-AZ support      | Manual AUTOSCALING needed        |
+| Control            | Less control, more simplicity  | Full control, more complexity   |
+
+VPC Peering: Creates a direct network connection between two VPCs for private communication without using the internet.
+
+kubectl exec: Run commands inside a running container (open shell to debug).
+kubectl logs: View logs for troubleshooting output and errors.
+kubectl describe: Get info and events about a resource for debugging issues.
+
 Q main difference why ecs made if eks there..==ECS was designed to provide simpler container orchestration tightly integrated with AWS and eks for multicloud
 Complexity:
 
@@ -99,7 +112,6 @@ This covers all critical DNS components in EKS concisely!
 
 
 kubeconfig--
-
 Cluster field: Contains Kubernetes API server URL and cluster info.
 Context field: Connects user, cluster, and namespace settings.
 Users field: Stores authentication details like certificates or tokens.
@@ -132,3 +144,61 @@ Deployment strategies you should know as a Devops Engineer:
 - high cost
 - high level of testing is required 
 
+
+
+
+
+• Use case for ConfigMap vs Secret
+---
+# ConfigMap: Non-sensitive application config for Java Spring Boot backend on AWS EKS
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prod-app-config
+  namespace: production # Isolates prod resources and access
+  labels:
+    app: my-java-app
+    env: production
+    tier: backend
+data:
+  SPRING_PROFILES_ACTIVE: "prod"               # Activates production Spring profile
+  JAVA_OPTS: "-Xms1024m -Xmx1024m -XX:+UseG1GC" # JVM memory/GC config
+  LOG_LEVEL: "INFO"                            # Sets application log level
+  SERVER_PORT: "8080"                          # Application port
+  FEATURE_NEW_PAYMENT_ENABLED: "true"           # Enable/disable payment module
+  FEATURE_ADVANCED_REPORTING: "false"           # Enable/disable reporting feature
+  SERVICE_TIMEOUT_MS: "5000"                   # API timeout (ms)
+  MAX_PAYLOAD_SIZE_MB: "10"                    # Max payload size (MB)
+  CACHE_TTL_SECONDS: "3600"                    # Distributed cache TTL (s)
+  RETRY_ATTEMPTS: "3"                          # API call retry attempts
+
+---
+# Secret: RDS DB credentials and sensitive external keys
+apiVersion: v1
+kind: Secret
+metadata:
+  name: prod-app-secrets
+  namespace: production
+  labels:
+    app: my-java-app
+    env: production
+    tier: backend
+type: Opaque
+data:
+  # RDS Database Connection (Layer 3)
+  DB_HOST: "cHJvZC1kYi5hYmMxMjMudXMtZWFzdC0xLnJkcy5hbWF6b25hd3MuY29t"      # "prod-db.abc123.us-east-1.rds.amazonaws.com"
+  DB_PORT: "NTQzMg=="                                                       # "5432"
+  DB_NAME: "cHJvZHVjdGlvbl9kYXRhYmFzZQ=="                                   # "production_database"
+  DB_USERNAME: "cHJvZF9qYXZhX3VzZXI="                                       # "prod_java_user"
+  DB_PASSWORD: "ajhAM3g5OUtGJipQYUdkJkZAMTIz"                               # "jH@3x99KF&*PaUd&fD@123"
+  # API Keys
+  STRIPE_SECRET_KEY: "c2tfbGl2ZV81MUJDRkZCNTJGRjREOUUzQjRCQ0ZGRDU0RkY0REZGRkQ=" # Stripe Live Key
+  SENDGRID_API_KEY: "U0cuWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWA==" # SendGrid Key
+  # Authentication Secret
+  JWT_SECRET: "U3VwZXJTZWN1cmVKd3RTZWNyZXRGb3JQcm9kMjAyNCEkJV4="                # "SuperSecureJwtSecretForProd2024!$%^"
+
+
+• What breaks if readinessProbe is wrong?
+readinessProbe wrong: Traffic sent to unprepared pods, causing request failures.
+livenessProbe wrong: Unnecessary restarts or dead pods not restarted.
+Both probes wrong: Crash loops and service outages.
