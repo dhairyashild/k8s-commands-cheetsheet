@@ -1,33 +1,30 @@
 | Key Point          | Amazon EKS                     | Self-Managed Kubernetes          |
 |--------------------|-------------------------------|---------------------------------|
-| Management         | Fully managed by AWS           | User manages everything          |
-| Updates & Patching | Automatic security patches&upgrades| Manual setup required        |
-| High Availability  | Built-in multi-AZ support      | Manual AUTOSCALING needed        |
-| Control            | Less control, more simplicity  | Full control, more complexity   |
+| Management         | 🟢 Fully managed by AWS        | 🟡 User manages everything      |
+| Updates & Patching | 🟢 Automatic security patches & upgrades | 🟡 Manual setup required |
+| High Availability  | 🟢 Built-in multi-AZ support   | 🟡 Manual AUTOSCALING needed    |
+| Control            | 🟡 Less control, more simplicity | 🟢 Full control, more complexity |
 
-VPC Peering: Creates a direct network connection between two VPCs for private communication without using the internet.
+🔗 VPC Peering: Creates a direct network connection between two VPCs for private communication without using the internet.
 
-kubectl exec: Run commands inside a running container (open shell to debug).
-kubectl logs: View logs for troubleshooting output and errors.
-kubectl describe: Get info and events about a resource for debugging issues.
+🛠️ kubectl exec: Run commands inside a running container (open shell to debug).
+📜 kubectl logs: View logs for troubleshooting output and errors.
+🔎 kubectl describe: Get info and events about a resource for debugging issues.
 
-Q main difference why ecs made if eks there..==ECS was designed to provide simpler container orchestration tightly integrated with AWS and eks for multicloud
-Complexity:
+❓ Q: main difference why ecs made if eks there..==ECS was designed to provide simpler container orchestration tightly integrated with AWS and eks for multicloud
 
-ECS is simpler to manage, ideal for AWS-integrated applications.
-EKS supports complex microservices architectures with Kubernetes flexibility.
+📊 Complexity:
+- 🟢 ECS is simpler to manage, ideal for AWS-integrated applications.
+- 🔵 EKS supports complex microservices architectures with Kubernetes flexibility.
 
-Portability:
-ECS ties workloads to AWS, limiting portability.
-EKS offers multi-cloud compatibility via Kubernetes' open standards
+🌍 Portability:
+- 🔴 ECS ties workloads to AWS, limiting portability.
+- 🟢 EKS offers multi-cloud compatibility via Kubernetes' open standards
 
-
-
-Q   how to choose deploy strategy
-
-on company need
-bluegreen & canary for 0 downtime but more resources
-rolling for 0 downtimetime 
+❓ Q: how to choose deploy strategy
+✅ on company need
+🔵🔵 bluegreen & 🐦 canary for 0 downtime but more resources
+🔄 rolling for 0 downtime 
 
 
  I’ve interviewed 100+ DevOps engineers. Most of them say, “I’ve done K8s in production.”
