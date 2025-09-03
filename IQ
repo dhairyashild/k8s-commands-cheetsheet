@@ -1,0 +1,106 @@
+| Key Point          | Amazon EKS                     | Self-Managed Kubernetes          |
+|--------------------|-------------------------------|---------------------------------|
+| Management         | 🟢 Fully managed by AWS        | 🟡 User manages everything      |
+| Updates & Patching | 🟢 Automatic security patches & upgrades | 🟡 Manual setup required |
+| High Availability  | 🟢 Built-in multi-AZ support   | 🟡 Manual AUTOSCALING needed    |
+| Control            | 🟡 Less control, more simplicity | 🟢 Full control, more complexity |
+
+🔗 VPC Peering: Creates a direct network connection between two VPCs for private communication without using the internet.
+
+🛠️ kubectl exec: Run commands inside a running container (open shell to debug).
+📜 kubectl logs: View logs for troubleshooting output and errors.
+🔎 kubectl describe: Get info and events about a resource for debugging issues.
+
+❓ Q: main difference why ecs made if eks there..==ECS was designed to provide simpler container orchestration tightly integrated with AWS and eks for multicloud
+
+📊 Complexity:
+- 🟢 ECS is simpler to manage, ideal for AWS-integrated applications.
+- 🔵 EKS supports complex microservices architectures with Kubernetes flexibility.
+
+🌍 Portability:
+- 🔴 ECS ties workloads to AWS, limiting portability.
+- 🟢 EKS offers multi-cloud compatibility via Kubernetes' open standards
+
+❓ Q: how to choose deploy strategy
+✅ on company need
+🔵🔵 bluegreen & 🐦 canary for 0 downtime but more resources
+🔄 rolling for 0 downtime 
+
+🔥 I've interviewed 100+ DevOps engineers. Most say "I've done K8s in production."
+But when real questions come, they freeze.
+
+🚨 Here's what I ask:
+
+1. 🔍 How does DNS resolution work inside a pod?
+   → And what do you check when a service isn't reachable by name?
+
+2. ⚙️ Walk me through what the controller manager does during a Deployment.
+   → Not rollout status. Reconciliation logic.
+
+3. 💾 What happens if a node with local storage gets autoscaled down?
+   → Be careful. This causes data loss in prod more often than you'd think.
+
+4. 📈 Post-deploy, latency spikes for 30% of users. No errors. No logs. What now?
+   → Your answer reveals if you know how to triage chaos.
+
+5. 🔒 How do you enforce runtime security in Kubernetes?
+   → PSP? AppArmor? OPA? Most people just hope for the best.
+
+6. 📊 HPA vs VPA vs Karpenter — when would you NOT use each?
+   → Bonus: How simulate HPA behavior in staging?
+
+7. 🚨 Tell me about last outage you debugged in Kubernetes.
+   → No postmortem? You weren't really there.
+
+❓ "A pod can't resolve service names. DNS looks fine. What's next move?"
+
+🛠️ 2. Test DNS Resolution from Debug Pod
+```bash
+kubectl run dns-test --image=busybox:1.28 --rm -it --restart=Never -- nslookup kubernetes.default
+
+
+❓  NetworkPolicy debugging steps
+
+1. kubectl describe networkpolicy
+Shows policy details (podSelector, rules); error if policy doesn't exist.
+
+2. kubectl get networkpolicy
+Lists active policies in namespace; error if none found.
+
+3. kubectl get pods --show-labels
+Displays pod labels; error if labels don’t match policy selector.
+
+4. Default allow or deny?
+Checks if traffic is allowed by default; error if default-deny blocks traffic.
+
+5. Default-deny policy exists?
+Confirms explicit block policy; error if missing intended isolation.
+
+6. nicolaka/netshoot image
+Tests pod connectivity; error if traffic blocked (network issue).
+
+7. CNI provider logs
+Shows policy enforcement errors; error if CNI denies traffic.
+
+8. Cloud Security Groups (AWS)
+Reveals conflicting security rules; error if SG overrides NetworkPolicy.
+
+
+
+
+
+
+• Debugging stuck pods & taints/tolerations 1 LINE EACH
+
+kubectl describe pod (check Events for errors)
+kubectl logs pod (check container logs)
+kubectl get nodes (check node status)
+Check resource quotas (quota exceeded)
+
+Taints/Tolerations:
+
+kubectl describe node (check node taints)
+Check pod tolerations (yaml match)
+Check node selector (node affinity)
+Check pod priority (preemption)
+Check custom scheduler (scheduling conflict)
