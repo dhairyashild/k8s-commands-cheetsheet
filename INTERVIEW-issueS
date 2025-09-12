@@ -342,14 +342,39 @@ Users field: Stores authentication details like certificates or tokens.
 
 
 
+############################################################################
 
 
 
+Most common reasons for 503 error:
+
+No healthy pod endpoints for service.
+Pod not ready (readiness probe failing).
+Ingress misconfiguration (wrong service name/port).
+Pod terminating or down.
+Resource overload or insufficient memory/CPU
+
+solution same --
+kubectl get endpoints <service-name>
+
+kubectl describe svc <service-name>
+
+kubectl get pods -o wide
+
+kubectl describe pod <podname>
+
+Check pod labels match service selector
+
+kubectl logs <ingress-pod-name>
+
+kubectl get ingress
+
+kubectl describe ingress <ingress-name>
+
+Ensure readiness/liveness probes are correct
 
 
-
-
-
+############################################################################
 
 
 
