@@ -104,3 +104,82 @@ Check pod tolerations (yaml match)
 Check node selector (node affinity)
 Check pod priority (preemption)
 Check custom scheduler (scheduling conflict)
+
+
+
+1. How do you handle secrets in Kubernetes securely?
+Answer:
+• Use Kubernetes Secrets (base64 encoded, not encrypted by default).
+• Enable Encryption at Rest for secrets in etcd.
+• Use external secret providers (HashiCorp Vault, AWS Secrets Manager, Azure Key Vault).
+• Restrict access with RBAC and least-privilege principles.
+
+⸻
+
+2. How do you debug a pod stuck in Pending state?
+Answer:
+• Run: `kubectl describe pod <name>` to see events.
+• Check for: insufficient resources, node selector/taint issues, or unbound PVCs.
+• Use: `kubectl get events --sort-by=.metadata.creationTimestamp`
+
+⸻
+
+3. How do you achieve multi-tenancy in Kubernetes?
+Answer:
+• Isolate teams/workloads using Namespaces.
+• Apply ResourceQuotas and LimitRanges per namespace.
+• Use NetworkPolicies for network isolation.
+• Enforce RBAC for access control.
+• Use policy engines (OPA Gatekeeper, Kyverno) for governance.
+
+⸻
+
+4. How would you implement canary deployments in Kubernetes?
+Answer:
+• Create two Deployments (stable and canary).
+• Use a Service with selectors for both.
+• Control traffic split via Service Mesh (Istio) or Ingress (Nginx).
+• Gradually increase canary traffic; roll back on failure.
+
+⸻
+
+5. How do you secure communication between microservices?
+Answer:
+• Use a service mesh (Istio, Linkerd) for mTLS.
+• Apply NetworkPolicies to restrict pod-to-pod traffic.
+• Use cert-manager for automatic TLS certificate management.
+
+⸻
+
+6. How do you scale Kubernetes clusters automatically?
+Answer:
+• Horizontal Pod Autoscaler (HPA) for scaling pods.
+• Cluster Autoscaler for adding/removing nodes.
+• Vertical Pod Autoscaler (VPA) for adjusting resource requests/limits.
+
+⸻
+
+7. How do you manage manifests across environments?
+Answer:
+• Use Kustomize with overlays (base/, dev/, prod/).
+• Use Helm with environment-specific values.yaml.
+• Adopt GitOps (ArgoCD, Flux) for continuous deployment.
+
+⸻
+
+8. How do you ensure zero downtime during upgrades?
+Answer:
+• Use RollingUpdate strategy in Deployments.
+• Configure PodDisruptionBudgets (PDBs).
+• Use readiness probes to ensure traffic only goes to healthy pods.
+• Upgrade nodes gradually (drain/cordon).
+
+⸻
+
+9. How do you enforce security policies cluster-wide?
+Answer:
+• Use Pod Security Admission (PSA) for pod security.
+• Implement RBAC for authorization.
+• Use OPA Gatekeeper or Kyverno for custom policies.
+• Scan images for vulnerabilities (Trivy, Clair).
+• Enable API server audit logging.
