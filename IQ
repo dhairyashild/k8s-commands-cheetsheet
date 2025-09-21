@@ -183,3 +183,70 @@ Answer:
 • Use OPA Gatekeeper or Kyverno for custom policies.
 • Scan images for vulnerabilities (Trivy, Clair).
 • Enable API server audit logging.
+
+⸻
+
+Traffic spike =Causes CPU/memory/network metrics to go up
+
+CPU spike: Check pod/node usage for throttling or overload.
+Memory spike: Check for high pod/node usage, evictions, OOM kills.
+Network spike: Check traffic in/out, DDoS, backups, data syncs.
+
+Check Prometheus/Grafana dashboards for real-time CPU, memory, network spikes.
+
+#SOLUTION===
+1) real traffic increase  == then autoscale
+2) hacker attack == block bad traffic (WAF=RATE-LIMIT + SG )
+3) Optimize code by devolopers if there is memory leak
+⸻
+
+NACL ISSUE ==
+pending pod --- node not ready ---documentation gives 3 ports must open for autoscale
+
+⸻
+500: Internal Server Error (App Crash)
+CRASHLOOP: kubectl describe pod + kubectl logs
+OOMKilled: Autoscale pod memory
+ENV VAR ERROR: Check configmap/secret linked to pod
+LIVENESS FAIL: Check probe path & port
+
+502: Bad Gateway  (Networking Issue)
+ROOT CAUSE: Network path from ALB to pod broken.
+CHECK: kubectl get endpoints - if empty, fix:
+Service selector labels
+Pod label matches service
+Pod readiness (must be 1/1)
+
+503: Service Unavailable (No Ready Pods) == READINESS PROBE problem only  
+ROOT CAUSE: Pods are running but not ready.
+CHECK: kubectl get pods → Look for 0/1 READY
+FIX: Increase initialDelaySeconds or fix  /health endpoint Readiness probe 
+
+504: Gateway Timeout == (Slow Response)
+ROOT CAUSE: App response > ALB timeout (60s default).
+CHECK:
+kubectl top pods → Is pod CPU throttled?
+App logs → Slow queries/hangs?
+FIX: Optimize app OR increase ALB idle timeout. 
+
+⸻
+
+
+⸻
+
+
+⸻
+
+
+⸻
+
+
+
+⸻
+
+
+
+⸻
+
+
+
