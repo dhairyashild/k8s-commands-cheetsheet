@@ -1,0 +1,10 @@
+kind: Pod
+apiVersion: v1
+metadata:
+   name: p1
+   label:                               # ERROR: Should be "labels:" (plural)
+      k1: v1
+spec:
+   containers:
+       name: c1                         # ERROR: Missing hyphen (-) before list items
+       image: nginx                     # ERROR: Incorrect indentation, should be under the list item
