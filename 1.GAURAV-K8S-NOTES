@@ -1,3 +1,5 @@
+########################################################## SUMMERY = SARANSH #################################################################################################################
+
 service(tps)     ==   v1 , ports:   ports is a list so use -   , protocol: TCP (कॅपिटल)  , type: NodePort / ClusterIP / LoadBalancer  ,protocol
 deployment(rst=r sm tmlsc   ==  apps/v1                 ,containers: env: & ports:  =app 3 are list so use -     , #  " cpu/memory " अल्पविराम हवा
 DEPLOY AND BOTH HAVE ---selector:  is coreect      ,   IN DEPLOYMENT -- labels is correct everywhere             
@@ -13,17 +15,182 @@ Dploy strategies== R R B C
 
 13  vid -- SET ENV remember this only ==        env:  - name:   value:/valueFrom:             k exec -it podnav -c containernav -- env
 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy
 spec:
-  containers:
-  - name: firstcontainer
-    image: coolgourav147/nginx-custom
-    ports:
-    - containerPort: 80
-    env:
-    - name: myname
-      value: Gaurav
-    - name: city
-      value: Jatpur
+  replicas: 3
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: first-container                                               
+        image: coolgourav147/nginx-custom
+      - name: second-container                                                        ## multi contanier vid 16
+        image: coolgourav147/nginx-custom
+        ports:
+        - containerPort: 80
+        env:
+        - name: myname
+          value: Gaurav
+        - name: city
+          value: Jatpur
+
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+
+        command: ["/bin/sh",]             ## shell-name     =vid 14                                     ##  #ENTRYPOINT IN DOCKER(FIX)  = command: ["shell name where u want to run command"]
+        args: [ "-c","echo $MESSAGE && echo My Pod Name is $POD_NAME && sleep infinity"]       ##  #CMD IN DOCKER(CAN BE OVERRIDE)= args: ["-c","command"]                   -c == command
+
+        args: ["sleep", "1000"]                                      #vid 15                    ## remeber only args sufficint to run commands no need of k8s command
+        resources:
+          requests:
+            memory: "64Mi"                #  " cpu/memory " अल्पविराम हवा
+            cpu: "250m"
+          limits:                          ## cpu and memory added by me if copy from k explain --recursive
+            memory: "128Mi"                ## not use m (megabyte) use only Mi (mebibyte-binary1024) 
+            cpu: "500m"                    ## capital M for memory but small m for cpu ani chiktun   ## 500m ==== 0.5 both same
+
+
+
+
+
+
+
+####################################37Service DNS
+go in pod in 1 ns
+k exec -it podnav -- /bin/bash
+curl svcnav                                            ####if ur in same ns of that svc
+curl svcnav.nsnav.svc.cluster.local
+####remember                        svc.ns                             SCL(.svc.cluster.local)     
+
+##################################39. Kubernetes ( In Hindi ) - Resource Quota
+Compute Resource Quota----limits.cpu , limits.memory	, requests.cpu	, requests.memory	
+Object Count Quota ----pods ,secrets, configmaps ,services, persistentvolumeclaims(PVC)         link---  https://kubernetes.io/docs/concepts/policy/resource-quotas/
+
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: myquota
+spec:
+  hard:                                  ####
+    pods: 10
+    requests.cpu: 500m                   ### 500m = 500 millicores (0.5 core),    -Sum of all Pods' CPU requests in that NS
+    requests.memory: 500Mi               ### container made request khali cpu ani memory yete, pan ithe lagun -- requests.memory
+    limits.cpu: "1"                      #### "1" = 1 core              -Sum of all Pods' CPU limits ≤ 1 core 
+    limits.memory: 1Gi                   #### 1 gibibyte== 1024  MB
+
+docker container stats container-id
+k describe ns                            ####it gives Quota and limitrange values USED + HARD
+
+Only Limits (no requests):
+Kubernetes automatically sets requests equal to limits
+
+Only Requests (no limits):
+The container can use unlimited resources (no upper bound), risking node resource exhaustion if unchecked.
+if resource-quta given then pod not created
+
+###########40. Kubernetes ( In Hindi ) - LimitRange  
+                                                    Sets min/max resource limits  for  pods in a namespace.
+k get limits/limitranges              #### both same
+k expalin limitrange | less                   ==== it gives apiversion , kind ...
+k api-resources | grep -i limits            ##### it gives short names used for that resource like limits   =limitranges
+
+LIMITS SETTING==
+- if pod LIMITS not given then it takes from DEFAULT in limitRange if limitrange not there then its keep same as limits in pod
+HOW POD SET RESOURCE LIMITS= 1)pod limits ---- 2)DEFAULT IN LIMITRANGE --- 3) KEEP SAME AS LIMITS IN POD
+
+REQUEST SETTING==
+- if pod REQUEST not given then it takes from DEFAULTREQUEST in limitRange
+HOW POD SET RESOURCE REQUESTS= 1)  pod REQUEST  ---- 2) DEFAULTREQUEST in limitRange  ---- 3) LimitRange default
+
+- If default is limit then how pod go for max
+default is only applied when Pod doesn't specify limits
+max is always enforced, even for Pods with explicit limits
+
+
+
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: production-resource-limits
+  namespace: your-namespace  # Always specify namespace
+spec:
+  limits:
+  - type: Container
+    # CPU settings (millicores)
+    min:
+      cpu: "100m"     # Minimum per container (0.1 core)
+    max:
+      cpu: "2000m"    # Maximum per container (2 cores)
+    default:
+      cpu: "500m"     # Default limit if not specified
+    defaultRequest:
+      cpu: "200m"     # Default request if not specified
+    
+    # Memory settings (MiB/GiB)
+    min:
+      memory: "128Mi"  # Minimum per container
+    max:
+      memory: "2Gi"    # Maximum per container
+    default:
+      memory: "512Mi"  # Default limit if not specified
+    defaultRequest:
+      memory: "256Mi"  # Default request if not specified
+    
+ 
+##########################################################################################################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## ##################################below notes imp points add in above so just read above points only #####################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ###############
 14  RUN COMMAND INSIDE POD (-- /bin/bash) ==                  kubectl exec -it myfirstpod -c firstcontainer -- /bin/bash
@@ -31,7 +198,7 @@ spec:
 
 15     COMMAND & ARGS
 
-Command: Specifies the executable or script to run inside the container.--Example: command: ["/bin/bash"]
+Command:  executable or script to run inside the container.--Example: command: ["/bin/bash"]
 Args: Provides arguments for the specified command or default image command.--Example: args: ["-c", "date"]
 
 Key Difference:
@@ -175,86 +342,4 @@ spec:
           limits:                          ## cpu and memory added by me if copy from k explain --recursive
             memory: "128Mi"                ## not use m (megabyte) use only Mi (mebibyte-binary1024) 
             cpu: "500m"                    ## capital M for memory but small m for cpu ani chiktun   ## 500m ==== 0.5 both same
-####################################37Service DNS
-go in pod in 1 ns
-k exec -it podnav -- /bin/bash
-curl svcnav                                            ####if ur in same ns of that svc
-curl svcnav.nsnav.svc.cluster.local
-####remember                        svc.ns                             SCL(.svc.cluster.local)     
 
-##################################39. Kubernetes ( In Hindi ) - Resource Quota
-Compute Resource Quota----limits.cpu , limits.memory	, requests.cpu	, requests.memory	
-Object Count Quota ----pods ,secrets, configmaps ,services, persistentvolumeclaims(PVC)         link---  https://kubernetes.io/docs/concepts/policy/resource-quotas/
-
-
-apiVersion: v1
-kind: ResourceQuota
-metadata:
-  name: myquota
-spec:
-  hard:                                  ####
-    pods: 10
-    requests.cpu: 500m                   ### 500m = 500 millicores (0.5 core),    -Sum of all Pods' CPU requests in that NS
-    requests.memory: 500Mi               ### container made request khali cpu ani memory yete, pan ithe lagun -- requests.memory
-    limits.cpu: "1"                      #### "1" = 1 core              -Sum of all Pods' CPU limits ≤ 1 core 
-    limits.memory: 1Gi                   #### 1 gibibyte== 1024  MB
-
-docker container stats container-id
-k describe ns                            ####it gives Quota and limitrange values USED + HARD
-
-Only Limits (no requests):
-Kubernetes automatically sets requests equal to limits
-
-Only Requests (no limits):
-The container can use unlimited resources (no upper bound), risking node resource exhaustion if unchecked.
-if resource-quta given then pod not created
-
-###########40. Kubernetes ( In Hindi ) - LimitRange  
-                                                    Sets min/max resource limits  for  pods in a namespace.
-k get limits/limitranges              #### both same
-k expalin limitrange | less                   ==== it gives apiversion , kind ...
-k api-resources | grep -i limits            ##### it gives short names used for that resource like limits   =limitranges
-
-LIMITS SETTING==
-- if pod LIMITS not given then it takes from DEFAULT in limitRange if limitrange not there then its keep same as limits in pod
-HOW POD SET RESOURCE LIMITS= 1)pod limits ---- 2)DEFAULT IN LIMITRANGE --- 3) KEEP SAME AS LIMITS IN POD
-
-REQUEST SETTING==
-- if pod REQUEST not given then it takes from DEFAULTREQUEST in limitRange
-HOW POD SET RESOURCE REQUESTS= 1)  pod REQUEST  ---- 2) DEFAULTREQUEST in limitRange  ---- 3) LimitRange default
-
-- If default is limit then how pod go for max
-default is only applied when Pod doesn't specify limits
-max is always enforced, even for Pods with explicit limits
-
-
-
-apiVersion: v1
-kind: LimitRange
-metadata:
-  name: production-resource-limits
-  namespace: your-namespace  # Always specify namespace
-spec:
-  limits:
-  - type: Container
-    # CPU settings (millicores)
-    min:
-      cpu: "100m"     # Minimum per container (0.1 core)
-    max:
-      cpu: "2000m"    # Maximum per container (2 cores)
-    default:
-      cpu: "500m"     # Default limit if not specified
-    defaultRequest:
-      cpu: "200m"     # Default request if not specified
-    
-    # Memory settings (MiB/GiB)
-    min:
-      memory: "128Mi"  # Minimum per container
-    max:
-      memory: "2Gi"    # Maximum per container
-    default:
-      memory: "512Mi"  # Default limit if not specified
-    defaultRequest:
-      memory: "256Mi"  # Default request if not specified
-    
- 
