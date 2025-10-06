@@ -1,3 +1,14 @@
+5.How do you expose a Kubernetes application to external traffic?
+Service: type: LoadBalancer (cloud provider)
+Service: type: NodePort (static port on nodes)
+Ingress: HTTP/HTTPS routing with Ingress Controller
+Gateway API: Advanced traffic routing (successor to Ingress)
+
+
+
+
+
+
 | Key Point          | Amazon EKS                     | Self-Managed Kubernetes          |
 |--------------------|-------------------------------|---------------------------------|
 | Management         | 🟢 Fully managed by AWS        | 🟡 User manages everything      |
