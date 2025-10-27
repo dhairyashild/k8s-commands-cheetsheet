@@ -1,41 +1,22 @@
 link    --- https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 
 
-Pod Topology Spread Constraints
+Pod Topology Spread Constraints == POD DISTRIUTUION CONTROL ON ZONE AND HOSTNAME(NODE)
               control how Pods are distributed across different failure domains (e.g., regions, zones, nodes) to enhance availability and resource utilization.
 
 Key Components:
 maxSkew: Defines the maximum allowed unevenness in Pod distribution. Must be greater than zero.
 topologyKey: Specifies the topology domain (like zone or node) for spreading Pods.topology.   (   kubernetes.io/region   , topology.kubernetes.io/zone)
-whenUnsatisfiable: Determines the action when constraints cannot be met (e.g., DoNotSchedule keeps the Pod pending).
+whenUnsatisfiable: Determines the action when constraints cannot be met (DoNotSchedule (strict so pending pod) | ScheduleAnyway (best-effort) Prod Choice: ScheduleAnyway).
 labelSelector: Filters which Pods the constraints apply to based on labels.
 
-Benefits:
-Improves fault tolerance by preventing a single point of failure.
-Optimizes resource utilization by distributing workloads evenly.
+scheduler sees all constraints(ZONE+NODE+RESOURCES AVAIL)i this as a single rules and finds a node that satisfies all of them at once.
 
-kind: Pod
-apiVersion: v1
-metadata:
-  name: mypod
-  labels:
-    foo: bar
-spec:
-  topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: zone
-    whenUnsatisfiable: DoNotSchedule
-    labelSelector:
-      matchLabels:
-        foo: bar
-  containers:
-  - name: pause
-    image: registry.k8s.io/pause:3.1
-Limitations:
-Constraints may not remain satisfied if Pods are removed (e.g., during scaling down).
+Conditions it checks (numbered):
 
-
-
+Zone Skew Check: (Pods_in_Zone_A - Pods_in_Zone_B) <= 1
+Node Skew Check: (Pods_on_Node_1 - Pods_on_Node_2) <= 1
+Resource Check: Node must have enough CPU/Memory for the pod.
 
 
 
@@ -63,10 +44,6 @@ spec:
 
 
 
-
-
-How It Works Together:
-Pods are spread across both zones and nodes, ensuring resilience against failures at either domain level.
 
 The scheduler considers both constraints simultaneously, only placing pods where both are satisfied (e.g., a pod must be placed in a specific zone and node).
 
