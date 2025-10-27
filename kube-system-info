@@ -36,18 +36,17 @@ node-exporter-qrs78                    1/1     Running   0          6d
 
 
 # Pod Count & Rationale for AWS EKS Cluster
-# Component          Type         Pod Count  Why
-# Cluster Autoscaler Deployment   1          Auto-scale worker nodes
-# AWS LB Controller  Deployment   2          High availability for critical ingress management
-# ExternalDNS        Deployment   1          Sync K8s services to Route53
-# Prometheus         Deployment   2          Metrics collection & storage
-# Grafana            Deployment   1          Single UI, stateless (config in PV)
-# Alertmanager       Deployment   2          HA for alert routing and deduplication
-# Node Exporter      DaemonSet    2          One per node type (per availability zone)
-# EBS CSI Controller Deployment   2          Storage controller HA
-# EBS CSI Node       DaemonSet    2          Per-node storage attachment
+# Component          Service Name              Type         Pod Count  Why
+# Cluster Autoscaler cluster-autoscaler        Deployment   1          Auto-scale worker nodes
+# AWS LB Controller  aws-load-balancer-webhook Deployment   2          High availability for critical ingress management
+# ExternalDNS        external-dns               Deployment   1          Sync K8s services to Route53
+# Prometheus         prometheus-k8s             Deployment   2          Metrics collection & storage
+# Grafana            grafana                    Deployment   1          Single UI, stateless (config in PV)
+# Alertmanager       alertmanager-main          Deployment   2          HA for alert routing and deduplication
+# Node Exporter      node-exporter              DaemonSet    2          One per node type (per availability zone)
+# EBS CSI Controller ebs-csi-controller-svc     Deployment   2          Storage controller HA
+# EBS CSI Node       ebs-csi-node               DaemonSet    2          Per-node storage attachment
 
-# CoreDNS            Deployment   2          HA for cluster DNS resolution
-# AWS Node (VPC CNI) DaemonSet    1          One per worker node across AZs - REQUIRED for pod networking + Assigns AWS VPC IPs to pods + Runs as DaemonSet + Enables security groups for pods
-# kube-proxy         DaemonSet    1          One per worker node across AZs - REQUIRED for service networking
-
+# CoreDNS            kube-dns                   Deployment   2          HA for cluster DNS resolution
+# AWS Node (VPC CNI) vpc-cni-metrics-service    DaemonSet    1          One per worker node across AZs - REQUIRED for pod networking + Assigns AWS VPC IPs to pods + Runs as DaemonSet + Enables security groups for pods
+# kube-proxy         kube-proxy                 DaemonSet    1          One per worker node across AZs - REQUIRED for service networking
