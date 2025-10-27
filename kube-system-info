@@ -1,0 +1,53 @@
+$ kubectl get pods -n kube-system
+NAME                                    READY   STATUS    RESTARTS   AGE
+aws-node-abc12                         1/1     Running   0          15d
+aws-node-def34                         1/1     Running   2          15d
+aws-node-ghi56                         1/1     Running   0          15d
+coredns-7b5d6c4b8f-abcde               1/1     Running   0          15d
+coredns-7b5d6c4b8f-fghij               1/1     Running   0          15d
+kube-proxy-xyz78                       1/1     Running   0          15d
+kube-proxy-qrs90                       1/1     Running   1          15d
+kube-proxy-lmn12                       1/1     Running   0          15d
+ebs-csi-controller-7d8f6c9b8c-abc12    5/5     Running   0          12d
+ebs-csi-controller-7d8f6c9b8c-def34    5/5     Running   0          12d
+ebs-csi-node-xyz56                     2/2     Running   0          12d
+ebs-csi-node-qrs78                     2/2     Running   0          12d
+
+$ kubectl get pods -n kube-system | grep cluster-autoscaler
+cluster-autoscaler-7d8f6c9b8c-abc12    1/1     Running   0          8d
+
+$ kubectl get pods -n kube-system | grep aws-load-balancer
+aws-load-balancer-controller-7d8f6c9b8c-def34   1/1     Running   0          8d
+aws-load-balancer-controller-7d8f6c9b8c-ghi56   1/1     Running   0          8d
+
+$ kubectl get pods -n kube-system | grep external-dns
+external-dns-7d8f6c9b8c-jkl90          1/1     Running   0          7d
+
+$ kubectl get pods -n monitoring
+NAME                                    READY   STATUS    RESTARTS   AGE
+prometheus-operator-abc12              1/1     Running   0          6d
+prometheus-k8s-0                       2/2     Running   0          6d
+prometheus-k8s-1                       2/2     Running   0          6d
+grafana-7d8f6c9b8c-def34               1/1     Running   0          6d
+alertmanager-main-0                    2/2     Running   0          6d
+alertmanager-main-1                    2/2     Running   0          6d
+node-exporter-xyz56                    1/1     Running   0          6d
+node-exporter-qrs78                    1/1     Running   0          6d
+
+
+# Pod Count & Rationale for AWS EKS Cluster
+# Component          Type         Pod Count  Why
+# Cluster Autoscaler Deployment   1          Auto-scale worker nodes
+# AWS LB Controller  Deployment   2          High availability for critical ingress management
+# ExternalDNS        Deployment   1          Sync K8s services to Route53
+# Prometheus         Deployment   2          Metrics collection & storage
+# Grafana            Deployment   1          Single UI, stateless (config in PV)
+# Alertmanager       Deployment   2          HA for alert routing and deduplication
+# Node Exporter      DaemonSet    2          One per node type (per availability zone)
+# EBS CSI Controller Deployment   2          Storage controller HA
+# EBS CSI Node       DaemonSet    2          Per-node storage attachment
+
+# CoreDNS            Deployment   2          HA for cluster DNS resolution
+# AWS Node (VPC CNI) DaemonSet    1          One per worker node across AZs - REQUIRED for pod networking + Assigns AWS VPC IPs to pods + Runs as DaemonSet + Enables security groups for pods
+# kube-proxy         DaemonSet    1          One per worker node across AZs - REQUIRED for service networking
+
