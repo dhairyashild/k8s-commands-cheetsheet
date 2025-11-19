@@ -1,0 +1,28 @@
+# EKS kubectl Context Commands - DevOps Engineer
+
+## Complete Stepwise Workflow (All-in-One)
+
+```bash
+# STEP 1: Check available contexts
+kubectl config get-contexts
+
+# STEP 2: View current context
+kubectl config current-context
+
+# STEP 3: Configure EKS cluster access
+aws eks update-kubeconfig --region <region> --name <cluster-name>
+
+# STEP 4: Switch to EKS context
+kubectl config use-context <eks-context-name>
+
+# STEP 5: Set default namespace
+kubectl config set-context --current --namespace=<namespace>
+
+# STEP 6: Verify configuration
+kubectl config view --minify
+
+# STEP 7: Test cluster connection
+kubectl cluster-info && kubectl get nodes
+
+# STEP 8: Verify pods and services
+kubectl get pods,svc --all-namespaces
