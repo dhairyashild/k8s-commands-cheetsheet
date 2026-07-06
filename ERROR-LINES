@@ -4,3 +4,20 @@ Error from server (BadRequest): error when creating "d.yaml": Deployment in vers
 SOLUTION==
 BadRequest  /  "v1" cannot be handled as    / unknown field "metadata.Namespace"       
 MEANS WRONG WORDS OR INDENTATION   (TYPO)
+
+
+kind: Pod
+apiVersion: v1                    # <-- lowercase v1
+metadata:
+  name: p1
+  labels:
+    k: v                          # <-- space after colon
+spec:
+  containers:
+  - name: c1                      # <-- remove quotes on c1 (optional)
+    image: nginx
+  tolerations:                    
+  - key: "key1"                   # <-- ERROR 2: No hyphen before key
+    operator: "equal"             # <-- ERROR 3: Should be "Equal" (capital E)
+    value: "value1"
+    effect: "noschedule"          # <-- ERROR 4: Should be "NoSchedule" (capital N, S)
