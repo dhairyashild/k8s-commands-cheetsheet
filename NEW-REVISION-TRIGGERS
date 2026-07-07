@@ -57,3 +57,238 @@ spec:
         operator: "Equal"
         value: "value"
         effect: "NoSchedule"
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+
+
+
+ENV VARS
+---------------------------------------------------------------------
+
+vi Dockerfile 
+
+FROM nginx:latest
+RUN apt-get update
+ENV WORDPRESS_VERSION 4.2.2
+ENV WORDPRESS_USER admin
+EXPOSE 80
+
+vi p.yaml
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: env-var-2
+  labels:
+    purpose: demonstrate-env-var-2
+spec:
+  containers:
+  - name: env-var
+    image: wordpress
+    env:
+    - name: WORDPRESS_VERSION                            # replacing value only          - no need   "     " on key only below value need it
+      value: "5.2.2"                                                      "     "
+    - name: WORDPRESS_USER
+      value: "ubuntu"
+    command: ["/bin/sh"]
+    args: ["-c", "echo WORDPRESS_VERSION: ${WORDPRESS_VERSION} && echo WORDPRESS_USER: ${WORDPRESS_USER} && sleep 3600"]
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+DOWNWARD-API.yaml
+---------------------------------------------------------------------
+https://kubernetes.io/docs/concepts/workloads/pods/downward-api/
+
+###code to remember -- not get on k8s.io
+ env
+ - name: APP_LABEL
+      valueFrom:
+        fieldRef:                              ####fieldPath:  —-it gives pod level env to pod eg. pod name , label, ns, pod ip
+          fieldPath: metadata.labels['app']
+    - name: CPU_REQUEST
+      valueFrom:
+        resourceFieldRef:                       ####resourceFieldRef :  —-for container level env vars as downward api EG.it can give resource {cpu , memory} related request limit only
+          containerName: main-container
+          resource: requests.cpu
+
+
+
+Here's a list of the most commonly used names from the downward API, focusing on their environment variable or volume file representation:
+
+--FieldRef for Pod metadata
+
+POD_NAME
+POD_NAMESPACE
+NODE_NAME
+POD_IP
+SERVICE_ACCOUNT_NAME
+HOST_IP
+POD_UID
+
+--ResourceFieldRef for container resource values--CONTAINER VALUES TO PASS ONLY:
+CPU_REQUEST
+MEMORY_REQUEST
+CPU_LIMIT
+MEMORY_LIMIT
+
+Volume Files (within mounted downwardAPI volume):
+labels
+annotations
+
+
+## What is Downward API?
+Exposes Pod/container metadata (name, namespace, labels, annotations, node info, resource requests/limits) to containers **without calling API server**.
+
+## 2 Ways to Expose:
+
+| Method | Use Case |
+|--------|----------|
+| **Environment Variables** | Simple values (Pod name, namespace, node, IP, service account) |
+| **DownwardAPI Volume (File)** | Labels & annotations (all as files) |
+
+---
+
+## Available Fields
+
+### Via `fieldRef` (Env + Volume)
+- `metadata.name` – Pod name
+- `metadata.namespace` – Pod namespace
+- `metadata.uid` – Pod UID
+- `metadata.labels['<KEY>']` – Specific label value
+- `metadata.annotations['<KEY>']` – Specific annotation value
+
+### Via `fieldRef` (Env ONLY – Not Volume)
+- `spec.serviceAccountName` – Service account name
+- `spec.nodeName` – Node name
+- `status.hostIP` – Node IP
+- `status.podIP` – Pod IP
+
+### Via DownwardAPI Volume (File ONLY – Not Env)
+- `metadata.labels` – All labels (label-key="value")
+- `metadata.annotations` – All annotations (annotation-key="value")
+
+### Via `resourceFieldRef` (Env + Volume)
+- `limits.cpu` / `requests.cpu`
+- `limits.memory` / `requests.memory`
+- `limits.ephemeral-storage` / `requests.ephemeral-storage`
+- `limits.hugepages-*` / `requests.hugepages-*`
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+DOWNWARD-API.yaml
+---------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+DOWNWARD-API.yaml
+---------------------------------------------------------------------
+
+
+
+
+
+
+
+
