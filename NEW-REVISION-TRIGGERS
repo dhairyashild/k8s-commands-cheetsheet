@@ -177,17 +177,20 @@ Exposes Pod/container metadata (name, namespace, labels, annotations, node info,
 
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
-
+check env var given in pod
 ---------------------------------------------------------------------
 
+| Method | Shows in printenv? | Realtime Command to Check |
+|--------|-------------------|---------------------------|
+| Direct `env` (key: value)        | ✅ Yes (shows value)         | `k exec <pod> -- printenv` |
+| FieldRef `fieldRef`(metadata.name| ✅ Yes (shows value) | `k exec <pod> -- printenv \| grep POD_NAME` |
+| ConfigMap → `env` (individual)   | ✅ Yes (shows value)         | `k exec <pod> -- printenv \| grep <KEY>` |
+| ConfigMap → `envFrom` (all keys) | ✅ Yes (shows all key=value) | `k exec <pod> -- env` |
+| ConfigMap → Volume Mount         | ❌ No (file, not env)        | `k exec <pod> -- cat /path/to/configmap/file` |
+| Secret → Volume Mount            | ❌ No (file, not env)        | `k exec <pod> -- cat /path/to/secret/file` |
 
-
-
-
-
-
-
-
+| Secret → `env` (individual)      | ❌ No (value masked)         | `k get secret <name> -o jsonpath='{.data.<key>}' \| base64 -d` |  --DIFFICULT TO REMEMBER
+| Secret → `envFrom` (all keys)    | ❌ No (values masked)        | `k get secret <name> -o yaml` |                                   --DIFFICULT 
 
 
 ---------------------------------------------------------------------
