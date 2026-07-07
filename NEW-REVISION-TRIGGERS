@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prod-app
+  namespace: production
+  labels:
+    app: prod-app
+spec:
+  replicas: 3                                         # ❌ NO NEW REVISION (Scaling only)
+  selector:
+    matchLabels:
+      app: prod-app
+      tier: backend
+  strategy:
+    type: RollingUpdate                               # ❌ NO NEW REVISION (Strategy change)
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  revisionHistoryLimit: 10                            # ❌ NO NEW REVISION (History config change)
+  template:
+    metadata:
+      labels:
+        app: prod-app
+        tier: backend
+      annotations:
+        deployment.kubernetes.io/restartedAt: "..."   # ✅ GREEN FLAG → NEW REVISION (Template metadata change)
+    spec:
+      containers:
+      - name: prod-app
+        image: your-registry/prod-app:v1.2.3          # ✅ GREEN FLAG → NEW REVISION (Container config change)
+        ports:
+        - containerPort: 8080                         # ✅ GREEN FLAG → NEW REVISION (Container config change)
+        env:
+        - name: ENV
+          value: "production"                         # ✅ GREEN FLAG → NEW REVISION (Env var change)
+        - name: LOG_LEVEL
+          value: "info"                               # ✅ GREEN FLAG → NEW REVISION (Env var addition)
+        resources:
+          requests:
+            memory: "256Mi"                           # ✅ GREEN FLAG → NEW REVISION (Resource change)
+            cpu: "250m"                               # ✅ GREEN FLAG → NEW REVISION (Resource change)
+          limits:
+            memory: "512Mi"                           # ✅ GREEN FLAG → NEW REVISION (Resource change)
+            cpu: "500m"                               # ✅ GREEN FLAG → NEW REVISION (Resource change)
+        livenessProbe:                                # ✅ GREEN FLAG → NEW REVISION (Probe activation/change)
+          httpGet:
+            path: /health
+            port: 8080
+        readinessProbe:                               # ✅ GREEN FLAG → NEW REVISION (Probe activation/change)
+          httpGet:
+            path: /ready
+            port: 8080
+      nodeSelector:                                   # ✅ GREEN FLAG → NEW REVISION (Scheduling change)
+        disktype: ssd
+      tolerations:                                    # ✅ GREEN FLAG → NEW REVISION (Scheduling change)
+      - key: "key"
+        operator: "Equal"
+        value: "value"
+        effect: "NoSchedule"
