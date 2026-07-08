@@ -1,3 +1,18 @@
+# Scheduler Down
+| ✅ WHAT WORKS (Green Flag) | ❌ WHAT DOES NOT WORK (Red Flag) |
+|---------------------------|----------------------------------|
+| ✅ Existing pods                                       | ❌ New pods remain in `Pending` state indefinitely. |
+| ✅ NodeName scheduling (direct node assignment) works. | ❌ Node Affinity, Anti-Affinity, Taints/Tolerations, and Node Selectors fail to work. |
+
+# Kube-API Server Down
+| ✅ WHAT WORKS (Green Flag) | ❌ WHAT DOES NOT WORK (Red Flag) |
+|---------------------------|----------------------------------|
+| ✅ Existing pods                                       | ❌ `kubectl` commands (get, apply, delete, etc.) stop working. |
+| ✅ Kubelet manages and runs existing containers        | ❌ New deployments cannot be created, updated, or deleted. |
+|                                                        | ❌ Scheduler stops functioning (new pods stay `Pending`). |
+|                                                        | ❌ Controllers (Deployment, ReplicaSet, HPA, etc.) stop working. |
+|                                                        | ❌ Auto-scaling (HPA/VPA) stops functioning. |
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
 5.How do you expose a Kubernetes application to external traffic?
 Service: type: LoadBalancer (cloud provider)
 Service: type: NodePort (static port on nodes)
