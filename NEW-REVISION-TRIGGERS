@@ -430,8 +430,40 @@ spec:
 
 
 ---------------------------------------------------------------------
+# NEW UPDATE GET NEW HASH TO RS     ----  1) NAME    2) LABELS -- MATCHLABELS   3) TEMPLATE POD LABELS
 ---------------------------------------------------------------------
+# NEW ReplicaSet created (automatically)
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myapp-7c9f5b4d3e                                                  # NEW hash
+  labels:
+    app: myapp
+    pod-template-hash: 7c9f5b4d3e                                          # NEW hash
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: myapp
+      pod-template-hash: 7c9f5b4d3e
+  template:
+    metadata:
+      labels:
+        app: myapp
+        pod-template-hash: 7c9f5b4d3e                             # NEW hash on new pods
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.22
 
+# NEW Pods (2 new pods)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-7c9f5b4d3e-xyz56
+  labels:
+    app: myapp
+    pod-template-hash: 7c9f5b4d3e                                  # NEW hash
 ---------------------------------------------------------------------
 
 
