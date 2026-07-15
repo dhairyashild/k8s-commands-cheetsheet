@@ -465,31 +465,84 @@ metadata:
     app: myapp
     pod-template-hash: 7c9f5b4d3e                                  # NEW hash
 ---------------------------------------------------------------------
+# INIT CONT SYNTAX TO REMMEBER
 
+spec:
+  containers: - name:       image
+  initcontainers:  
+  - name:
+    image:
 
+-------------------------
+LABELS POD
+k run myjpod --image=nginx --env=af=bd       --- BEFORE CREATION
+k run mypod --image=nginx --labels=a=b       --- BEFORE CREATE
 
+k label po mypod x=y                         --- AFTER CREATION OF POD
+k label po mypod x=a --overwrite             --- AFTER CREATION OF POD OVERWRITE ONLY REPLACES VALUE x to a BUT KEY KEPT SAME AS x
 
-
-
-
-
+# Pod starts with 3 labels: app=frontend, tier=web, env=prod
+kubectl label pod mypod tier=backend --overwrite
+                                NEW LABLES --- app=frontend, tier=backend, env=prod
 
 
 
 ---------------------------------------------------------------------
+29. Kubernetes ( In Hindi ) - Deployment MaxSurge
+
+
+# Real-time Production Strategy Configuration Example
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%       # Or 1: Limits temporary overhead costs while ensuring update speed
+      maxUnavailable: 0   # Strict 0: Ensures no loss of active processing capacity during rollout
 ---------------------------------------------------------------------
+30. Kubernetes ( In Hindi ) - Kubernetes Rollout
 
+RollingUpdateStrategy  DEFAULT VALUES :
+25% max unavailable,
+25% max surge
+----------------------
+
+kubectl apply f firstdeploy.yml --record         -----  THIS COMMAND TRIGGER BELOW ROLLOUT STATUS
+
+root@master:~# kubectl rollout history deploy firstdeploy
+deployment.apps/firstdeploy
+REVISION    CHANGE-CAUSE
+1           <none>
+2           <none>
+3           kubectl apply --filename=firstdeploy.yml --record=true          # kubectl apply f firstdeploy.yml --record
+
+-------
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firstdeploy
+  labels:
+    name: firstdeploy
+  annotations:
+    kubernetes.io/change-cause: "my custom message"           #  HERE U CAN ALSO MAKE RECORD TRUE BY ----> ANNOTATIONS
+
+root@master:~# kubectl rollout history deploy firstdeploy
+deployment.apps/firstdeploy
+REVISION    CHANGE-CAUSE
+1           <none>
+2           <none>
+3           kubectl apply --filename=firstdeploy.yml --record=true
+4           my custom message
 ---------------------------------------------------------------------
+31. Kubernetes ( In Hindi ) - Kubernetes Recreate Strategy     
+- USED IN DEV STAGE FOR FASTER CHECKING OF ROLLOUT  
+- NO PROD USE
 
-
-
-
-
-
-
-
-
-
+spec:
+  replicas:
+  strategy:
+    type: Recreate
 
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
