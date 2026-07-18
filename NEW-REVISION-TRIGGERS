@@ -618,24 +618,41 @@ Git will automatically apply the specific definitions whenever you run commands 
 
 
 
+# git rm --cached file.txt -> Untracks from Git= removed from staging ; keeps in working
+# git rm -f file.txt       -> Removed from staging AND delete from working also.
 
 
+# git restore deletedfromworking.txt          -- DELETED FROM WORKING BUT GETTING IT BACK IF FILE PRESENT IN STAGONG AREA
 
 
+# git commit -m "1st commit" 
+# git add forgetedfile.txt
+# git commit --amend       ---- this adds forgettedfile.txt in above 1 st commit , it not create new commit
 
 
+mkdir folder
+git add .
+git status   --  nothing to commit   -- means it do not stage empty folder
+
+# git commit --amend                             ---- this adds forgettedfile.txt in above 1 st commit , it not create new commit
+# git commit --amend -m "User module completed"  ---- this changes wrong commit message
 
 
+git log --oneline
+# git log --grep="modified"       --  get all commit with modified word in commit message
+# git log --author="Gaurav"      -- GET ANY USER CALL COMMITS
 
 
+# git diff
+# Shows unstaged changes between your current working directory and the staging area.  
+-- SHOWS RED COLOR LINE IF  1) LINE MODIFIED    2) LINE REMOVED
+         GREEN              1) LINE ADDED NEW
 
+# git diff --staged
+# Shows changes between your staged files (ready to commit) and the last commit.
 
-
-
-
-
-
-
-
+# git log --oneline --             -- COMITS FROM BRANCH UR CURRENTLY ON
+# git log --oneline --all          -- ALL COMMITS FROM ALL BRANCHES
+# git branch -m old_name new_name  -- RENAME BRANCH
 
 
