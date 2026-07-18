@@ -576,8 +576,61 @@ DOWNWARD-API.yaml
 
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
-DOWNWARD-API.yaml
+GIT
 ---------------------------------------------------------------------
+
+
+ git add .                         vs           git restore --cached filename
+
+
+git status -s 
+AM     1.txt     --- A = staged    , M = modified same file on working dir
+A      2.txt     --- A = staged 
+??     3.txt     ---?? = not staged just created new file in working dir
+
+
+vi gitignore
+# igonring log files                      --  give this title so new developer get which files and why that file ignored
+*.log
+
+*.properties
+!example.properties                      -- !       this sign opposite to     *.properties
+!app.log                                 -- !       this sign opposite to     *.log
+
+
+/*.log           -- Adding a leading slash (  / * . log  ) restricts the ignore pattern entirely to the root directory,'docs/app.log' is safely tracked by Git.
+###################
+# /*.log targets ONLY the root directory (e.g., ignores 'j.log', but tracks 'docs/app.log').
+# *.log targets the root directory AND all subdirectories recursively (e.g., ignores both 'j.log' and 'docs/app.log').
+
+
+
+# You can easily set up project-specific rules by dropping a distinct '.gitignore' file right inside each folder; You can easily set up project-specific rules by dropping a distinct '.gitignore' file right inside each folder; 
+Git will automatically apply the specific definitions whenever you run commands within those subdirectories.
+
+# mono-repo/
+# ├── c-proj/
+# │   └── .gitignore
+# ├── go-proj/
+# │   └── .gitignore
+# └── node-proj/
+#     └── .gitignore
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
