@@ -582,6 +582,13 @@ spec:                        # ❌ was: spaec (typo)
 
 k api-resources| grep -i volume
 persistentvolumeclaims              pvc                                 v1                                true         PersistentVolumeClaim
+---ABOVE TRUE TELLS RESOURCE AFTER -i CAN HAVE NAMESPACE OR NOT
+
+
+- kubectl apply f pod.yml --namespace test                        OR
+metadata:
+  namesapce: test
+- kubectl get po -n test
 
 
 
