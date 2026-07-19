@@ -548,14 +548,40 @@ spec:
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
+200Mi = 200 Mebibytes (binary) = 200 × 1024² = 209,715,200 bytes
+200MB = 200 Megabytes (decimal) = 200 × 1000² = 200,000,000 bytes
+Key: Mi (binary) vs MB (decimal) - Mi is ~4.86% larger!
+DevOps use Mi/Gi for pods because K8s calculates in binary, MB is rarely used
 
 
+kind: Deployment
+apiVersion: apps/v1          # ❌ was: app/v1 (missing 's')
+metadata:
+  name: q
+  labels:                    # ❌ was: label (should be labels)
+    a: b
+spec:                        # ❌ was: spaec (typo)
+  replicas: 5
+  strategy:                  
+    type: RollingUpdate      # ❌ was: rollingUpdate (case sensitive - should be RollingUpdate)
+    rollingUpdate:           # ✅ missing this line
+      maxSurge: 2            # ✅ but should also have maxUnavailable
+  selector:
+    matchLabels:             
+      a: b
+  template:
+    metadata:
+      name: c
+      labels:
+        a: b
+    spec:
+      containers:            # ❌ was missing 'containers:' key
+      - name: c2             # ✅ this is inside containers
+        image: nginx
 
 
-
-
-
-
+k api-resources| grep -i volume
+persistentvolumeclaims              pvc                                 v1                                true         PersistentVolumeClaim
 
 
 
