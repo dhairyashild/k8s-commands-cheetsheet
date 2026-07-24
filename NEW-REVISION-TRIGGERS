@@ -594,19 +594,51 @@ metadata:
 
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
-DOWNWARD-API.yaml
+37 VID K8S GAURAV
 ---------------------------------------------------------------------
 
+39. Kubernetes ( In Hindi ) - Resource Quota
+Compute Resource Quota----limits.cpu , limits.memory	, requests.cpu	, requests.memory	
+Object Count Quota ----pods ,secrets, configmaps ,services, persistentvolumeclaims(PVC)         link---  https://kubernetes.io/docs/concepts/policy/resource-quotas/
+
+
+---------BELOW BOTH COMMAND COMBINED USED TO KNOW WHICH POD COME UNDER WHICH SVC BY GAURAV
+- kubectl get pods --show-labels
+- kubectl get svc -o wide
+
+SUMMARY:
+1. CORE DIFFERENCE:
+   - ResourceQuota = TOTAL cap for the whole Namespace.
+   - LimitRange = DEFAULTS & MIN/MAX limits per single Container.
+2. ENV STRATEGY:
+   - DEV / QA: Use BOTH to stop runaway pods and resource hogging.
+   - PROD: Use explicit Pod Requests/Limits in Helm manifests; LimitRange as safety fallback.
 
 
 
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: myquota
+spec:
+  hard:                                  ####
+    pods: 10
+    requests.cpu: 500m                   ### 500m = 500 millicores (0.5 core),    -Sum of all Pods' CPU requests in that NS
+    requests.memory: 500Mi               ### container made request khali cpu ani memory yete, pan ithe lagun -- requests.memory
+    limits.cpu: "1"                      #### "1" = 1 core              -Sum of all Pods' CPU limits ≤ 1 core 
+    limits.memory: 1Gi                   #### 1 gibibyte== 1024  MB
 
+-docker container stats container-id
+-k describe ns                            ####it gives Quota and limitrange values USED + HARD
+-Only Limits (no requests): -- Kubernetes automatically sets requests = limits
+-Only Requests (no limits): -- The container can use unlimited resources (no upper bound),
+-----------------
+kubectl explain limitrange                 ----- USE FOR BELOW VALUES TO KNOW
+KIND:       LimitRange
+VERSION:    v1
 
-
-
-
-
-
+kubectl api-resources | grep -i limit
+limitranges                         limits                              v1                                true         LimitRange
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 GIT
