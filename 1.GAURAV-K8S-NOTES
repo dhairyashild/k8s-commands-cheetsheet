@@ -77,7 +77,17 @@ curl svcnav                                            ####if ur in same ns of t
 curl svcnav.nsnav.svc.cluster.local
 ####remember                        svc.ns                             SCL(.svc.cluster.local)     
 
+---------BELOW BOTH COMMAND COMBINED USED TO KNOW WHICH POD COME UNDER WHICH SVC BY GAURAV
+- kubectl get pods --show-labels
+NAME        READY   STATUS    RESTARTS   AGE     LABELS
+database    1/1     Running   0          104s    app=myapp
+
+- kubectl get svc -o wide
+NAME             TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE    SELECTOR
+myfirstservice   NodePort    18.97.49.180   <none>        9000:32000/TCP   143d   app=myapp
+
 ##################################39. Kubernetes ( In Hindi ) - Resource Quota
+
 Compute Resource Quota----limits.cpu , limits.memory	, requests.cpu	, requests.memory	
 Object Count Quota ----pods ,secrets, configmaps ,services, persistentvolumeclaims(PVC)         link---  https://kubernetes.io/docs/concepts/policy/resource-quotas/
 
@@ -97,13 +107,17 @@ spec:
 docker container stats container-id
 k describe ns                            ####it gives Quota and limitrange values USED + HARD
 
-Only Limits (no requests):
-Kubernetes automatically sets requests equal to limits
+Only Limits (no requests): -- Kubernetes automatically sets requests = limits
 
-Only Requests (no limits):
-The container can use unlimited resources (no upper bound), risking node resource exhaustion if unchecked.
-if resource-quta given then pod not created
+Only Requests (no limits): -- The container can use unlimited resources (no upper bound), risking node resource exhaustion if unchecked.
 
+SUMMARY:
+1. CORE DIFFERENCE:
+   - ResourceQuota = TOTAL cap for the whole Namespace.
+   - LimitRange = DEFAULTS & MIN/MAX limits per single Container.
+2. ENV STRATEGY:
+   - DEV / QA: Use BOTH to stop runaway pods and resource hogging.
+   - PROD: Use explicit Pod Requests/Limits in Helm manifests; LimitRange as safety fallback.
 ###########40. Kubernetes ( In Hindi ) - LimitRange  
                                                     Sets min/max resource limits  for  pods in a namespace.
 k get limits/limitranges              #### both same
