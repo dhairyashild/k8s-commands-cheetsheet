@@ -645,17 +645,23 @@ GIT
 ---------------------------------------------------------------------
 
 
- git add .                         vs           git restore --cached filename
+ git add .                         vs          `git restore --staged file1`       # add     vs    rs
+ git restore deletedfromworking.txt       -- DELETED FROM WORKING BUT GETTING IT BACK IF FILE PRESENT IN STAGING AREA
+
+###  FORGET RM COMMANDS NO NEED FOR DEVOPS , REMMEBER RESTORE AND RESET FOR REVERSING
+###### git rm --cached file.txt -> Untracks from Git= removed from staging ; keeps in working
+###### git rm -f file.txt       -> Removed from staging AND delete from working also.
 
 
-git status -s 
-AM     1.txt     --- A = staged    , M = modified same file on working dir
-A      2.txt     --- A = staged 
+ 
+git status -s                     #  AM    REMEMBER AS MORNING TIME
+AM     1.txt     --- A = Added on staging   , M = modified same file on working dir
+A      2.txt     --- A = Added on staging
 ??     3.txt     ---?? = not staged just created new file in working dir
 
 
 vi gitignore
-# igonring log files                      --  give this title so new developer get which files and why that file ignored
+# igonring log files                      -- give this title so new developer get which files and why that file ignored
 *.log
 
 *.properties
@@ -683,13 +689,6 @@ Git will automatically apply the specific definitions whenever you run commands 
 
 
 
-# git rm --cached file.txt -> Untracks from Git= removed from staging ; keeps in working
-# git rm -f file.txt       -> Removed from staging AND delete from working also.
-
-
-# git restore deletedfromworking.txt          -- DELETED FROM WORKING BUT GETTING IT BACK IF FILE PRESENT IN STAGONG AREA
-
-
 # git commit -m "1st commit" 
 # git add forgetedfile.txt
 # git commit --amend       ---- this adds forgettedfile.txt in above 1 st commit , it not create new commit
@@ -699,8 +698,8 @@ mkdir folder
 git add .
 git status   --  nothing to commit   -- means it do not stage empty folder
 
-# git commit --amend                             ---- this adds forgettedfile.txt in above 1 st commit , it not create new commit
-# git commit --amend -m "User module completed"  ---- this changes wrong commit message
+# git commit --amend                 ---- this adds forgettedfile.txt in above 1 st commit , it not create new commit
+# git commit --amend -m "User module completed"     ---- this changes wrong commit message
 
 
 git log --oneline
@@ -719,5 +718,13 @@ git log --oneline
 # git log --oneline --             -- COMITS FROM BRANCH UR CURRENTLY ON
 # git log --oneline --all          -- ALL COMMITS FROM ALL BRANCHES
 # git branch -m old_name new_name  -- RENAME BRANCH
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+LINUX
+---------------------------------------------------------------------
+ln -s /opt/company/projects/team-alpha/backend/src/main/java/com/app/controllers ~/dev-controllers
 
-
+A hard link = 
+multiple filenames pointing to the exact same physical data on disk; 
+changes in one reflect in all, 
+but deleting one doesn't delete the data until all links are removed.
